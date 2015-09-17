@@ -1,0 +1,26 @@
+<RelativeLayout xmlns:android = "http://schemas.android.com/apk/res/android"
+             xmlns:tools = "http://schemas.android.com/tools"
+             android:layout_width = "match_parent"
+             android:layout_height = "match_parent"
+             tools:context = "g0v.ly.android.voterguide.ui.MainFragment">
+
+    <TextView
+        android:layout_width = "match_parent"
+        android:layout_height = "match_parent"
+        android:text = "@string/hello_blank_fragment"/>
+
+    <Button
+        android:id="@+id/goto_info_btn"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Info"/>
+
+    <Button
+        android:id="@+id/goto_guide_btn"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:layout_above="@id/goto_info_btn"
+        android:text="Guide"/>
+
+</RelativeLayout>
