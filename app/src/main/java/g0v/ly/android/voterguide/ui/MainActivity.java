@@ -9,11 +9,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import g0v.ly.android.voterguide.R;
+import g0v.ly.android.voterguide.ui.guide.GuideFragment;
+import g0v.ly.android.voterguide.ui.info.InfoFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private enum State {
-        STATE_MAIN("state.main");
+        STATE_MAIN("state.main"),
+        STATE_GUIDE("state.guide"),
+        STATE_INFO("state.info");
 
         private final String id;
         State(String id) {
@@ -68,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
             case STATE_MAIN:
                 fragment = MainFragment.newFragment(mainFragmentCallback);
                 break;
+            case STATE_GUIDE:
+                fragment = GuideFragment.newFragment();
+                stacked = true;
+                break;
+            case STATE_INFO:
+                fragment = InfoFragment.newFragment();
+                stacked = true;
+                break;
         }
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -82,11 +94,14 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void gotoGuide() {
-
+            state = State.STATE_GUIDE;
+            launch(state);
         }
 
         @Override
         public void gotoInfo() {
+            state = State.STATE_INFO;
+            launch(state);
 
         }
     };
