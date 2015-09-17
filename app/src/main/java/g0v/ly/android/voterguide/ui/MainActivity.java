@@ -1,4 +1,4 @@
-package g0v.ly.android.voterguide;
+package g0v.ly.android.voterguide.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import g0v.ly.android.voterguide.ui.MainFragment;
+import g0v.ly.android.voterguide.R;
 
 public class MainActivity extends AppCompatActivity {
 
