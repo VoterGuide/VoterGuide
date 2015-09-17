@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (state) {
             case STATE_MAIN:
-                fragment = MainFragment.newInstance("a", "b");
+                fragment = MainFragment.newFragment(mainFragmentCallback);
                 break;
         }
 
@@ -78,4 +78,16 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+    private MainFragment.Callback mainFragmentCallback = new MainFragment.Callback() {
+
+        @Override
+        public void gotoGuide() {
+
+        }
+
+        @Override
+        public void gotoInfo() {
+
+        }
+    };
 }
