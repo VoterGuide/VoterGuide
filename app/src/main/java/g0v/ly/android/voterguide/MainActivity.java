@@ -1,16 +1,39 @@
 package g0v.ly.android.voterguide;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import g0v.ly.android.voterguide.ui.MainFragment;
+
 public class MainActivity extends AppCompatActivity {
+
+    private enum State {
+        STATE_MAIN("state.main");
+
+        private final String id;
+        State(String id) {
+            this.id = id;
+        }
+    }
+
+    private State state = State.STATE_MAIN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        launch(state);
     }
 
     @Override
@@ -34,4 +57,25 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void launch(State state) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentByTag(state.id);
+
+        boolean stacked = false;
+
+        switch (state) {
+            case STATE_MAIN:
+                fragment = MainFragment.newInstance("a", "b");
+                break;
+        }
+
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragmentHolder, fragment, state.id);
+        if (stacked) {
+            fragmentTransaction.addToBackStack(null);
+        }
+        fragmentTransaction.commit();
+    }
+
 }
