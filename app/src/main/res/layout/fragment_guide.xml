@@ -5,6 +5,7 @@
              tools:context = "g0v.ly.android.voterguide.ui.guide.GuideFragment">
 
     <TextView
+        android:id="@+id/guide_text"
         android:layout_width = "match_parent"
         android:layout_height = "match_parent"
         android:text = "guide fragment"/>
