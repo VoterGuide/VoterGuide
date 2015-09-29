@@ -13,6 +13,7 @@ public class GuideFragment extends Fragment {
 
     private int currentStep = 0;
     private TextView guideText;
+    private TextView previousStepBtn;
 
     public static GuideFragment newFragment() {
         GuideFragment fragment = new GuideFragment();
@@ -24,7 +25,7 @@ public class GuideFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_guide, container, false);
 
         guideText = (TextView) rootView.findViewById(R.id.guide_text);
-        TextView previousStepBtn = (TextView) rootView.findViewById(R.id.previous_step_btn);
+        previousStepBtn = (TextView) rootView.findViewById(R.id.previous_step_btn);
         TextView nextStepBtn = (TextView) rootView.findViewById(R.id.next_step_btn);
 
         previousStepBtn.setOnClickListener(onClickListener);
@@ -39,14 +40,21 @@ public class GuideFragment extends Fragment {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.previous_step_btn:
-                    guideText.setText("step: " + currentStep);
                     currentStep--;
                     break;
                 case R.id.next_step_btn:
-                    guideText.setText("step: " + currentStep);
                     currentStep++;
                     break;
             }
+
+            if (currentStep > 0) {
+                previousStepBtn.setVisibility(View.VISIBLE);
+            }
+            else {
+                previousStepBtn.setVisibility(View.GONE);
+            }
+
+            guideText.setText("step: " + currentStep);
         }
     };
 }
