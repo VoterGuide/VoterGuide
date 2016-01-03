@@ -1,5 +1,6 @@
 package g0v.ly.android.voterguide.ui.info;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,12 +18,17 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
+import g0v.ly.android.voterguide.ui.MainActivity;
 import g0v.ly.android.voterguide.utilities.HardCodeInfos;
 
 public class SelectCountyFragment extends Fragment {
     @Bind(R.id.counties_listview) ListView countiesListView;
 
+    private static List<String> counties = new ArrayList<>();
+
     public static SelectCountyFragment newFragment() {
+        HardCodeInfos hardCodeInfos = HardCodeInfos.getInstance();
+        counties = hardCodeInfos.getTaiwanCounties();
         return new SelectCountyFragment();
     }
 
@@ -33,7 +39,7 @@ public class SelectCountyFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        countiesListView.setAdapter(new ListViewAdapter());
+        countiesListView.setAdapter(new ListViewAdapter(counties));
         countiesListView.setOnItemClickListener(itemClickListener);
 
         return rootView;
@@ -46,9 +52,8 @@ public class SelectCountyFragment extends Fragment {
 
         List<String> counties = new ArrayList<>();
 
-        public ListViewAdapter() {
-            HardCodeInfos hardCodeInfos = HardCodeInfos.getInstance();
-            counties = hardCodeInfos.getTaiwanCounties();
+        public ListViewAdapter(List<String> counties) {
+            this.counties = counties;
         }
 
         @Override
@@ -92,7 +97,12 @@ public class SelectCountyFragment extends Fragment {
     private ListView.OnItemClickListener itemClickListener = new ListView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Activity activity = SelectCountyFragment.this.getActivity();
+            if (activity instanceof MainActivity) {
+                String selectedCountyString = counties.get(position);
 
+                ((MainActivity) activity).gotoFragmentWithState(MainActivity.State.STATE_INFO_CANDIDATES, selectedCountyString);
+            }
         }
     };
 }

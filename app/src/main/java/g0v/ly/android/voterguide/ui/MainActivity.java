@@ -10,14 +10,18 @@ import android.view.MenuItem;
 
 import g0v.ly.android.voterguide.R;
 import g0v.ly.android.voterguide.ui.guide.GuideFragment;
+import g0v.ly.android.voterguide.ui.info.CountyCandidatesListFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCountyFragment;
 
 public class MainActivity extends AppCompatActivity {
+    public static String KEY_FRAGMENT_TRANSACTION_BUNDLE_ARGUMENT = "key.fragment.transaction.bundle.argument";
 
-    private enum State {
+    public enum State {
         STATE_MAIN("state.main"),
         STATE_GUIDE("state.guide"),
-        STATE_INFO("state.info");
+        STATE_INFO_COUNTIES("state.info.counties"),
+        STATE_INFO_CANDIDATES("state.info.candidates"),
+        STATE_INFO_CANDIDATE("state.info");
 
         private final String id;
         State(String id) {
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private State state = State.STATE_MAIN;
+    private String bundleMessages = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +81,12 @@ public class MainActivity extends AppCompatActivity {
                 fragment = GuideFragment.newFragment();
                 stacked = true;
                 break;
-            case STATE_INFO:
+            case STATE_INFO_COUNTIES:
                 fragment = SelectCountyFragment.newFragment();
+                stacked = true;
+                break;
+            case STATE_INFO_CANDIDATES:
+                fragment = CountyCandidatesListFragment.newFragment();
                 stacked = true;
                 break;
         }
@@ -86,6 +95,13 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.fragmentHolder, fragment, state.id);
         if (stacked) {
             fragmentTransaction.addToBackStack(null);
+        }
+        if (bundleMessages.length() > 0) {
+            Bundle args = new Bundle();
+            args.putString(KEY_FRAGMENT_TRANSACTION_BUNDLE_ARGUMENT, bundleMessages);
+            fragment.setArguments(args);
+
+            bundleMessages = "";
         }
         fragmentTransaction.commit();
     }
@@ -100,9 +116,15 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void gotoInfo() {
-            state = State.STATE_INFO;
+            state = State.STATE_INFO_COUNTIES;
             launch(state);
 
         }
     };
+
+    public void gotoFragmentWithState(State state, String message) {
+        this.state = state;
+        bundleMessages = message;
+        launch(this.state);
+    }
 }

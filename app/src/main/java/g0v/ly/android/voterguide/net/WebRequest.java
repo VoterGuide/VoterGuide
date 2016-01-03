@@ -22,6 +22,8 @@ public class WebRequest {
     private static final int CONNECT_TIMEOUT_IN_MILLIS = 10000;
     private static final int SOCKET_TIMEOUT_IN_MILLIS = 10000;
 
+    public static String G0V_LY_VOTE_API_URL = "http://vote.ly.g0v.tw/api/candidates_terms/";
+
     private HttpMethod httpMethod;
     private String basicAuth;
 
@@ -121,6 +123,7 @@ public class WebRequest {
             if (httpMethod == HttpMethod.GET && queryString != null && queryString.length() > 0) {
                 urlString += "?" + queryString;
             }
+            logger.debug("urlString = {}", urlString);
             url = new URL(urlString);
         }
         catch (MalformedURLException e) {
