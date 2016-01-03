@@ -10,7 +10,7 @@ import android.view.MenuItem;
 
 import g0v.ly.android.voterguide.R;
 import g0v.ly.android.voterguide.ui.guide.GuideFragment;
-import g0v.ly.android.voterguide.ui.info.InfoFragment;
+import g0v.ly.android.voterguide.ui.info.CandidateInfoFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 stacked = true;
                 break;
             case STATE_INFO:
-                fragment = InfoFragment.newFragment();
+                fragment = CandidateInfoFragment.newFragment();
                 stacked = true;
                 break;
         }

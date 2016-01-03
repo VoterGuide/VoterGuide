@@ -8,10 +8,10 @@ import android.view.ViewGroup;
 
 import g0v.ly.android.voterguide.R;
 
-public class InfoFragment extends Fragment {
+public class CandidateInfoFragment extends Fragment {
 
-    public static InfoFragment newFragment() {
-        InfoFragment fragment = new InfoFragment();
+    public static CandidateInfoFragment newFragment() {
+        CandidateInfoFragment fragment = new CandidateInfoFragment();
         return fragment;
     }
 
