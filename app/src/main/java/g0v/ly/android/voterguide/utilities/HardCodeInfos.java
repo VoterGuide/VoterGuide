@@ -34,7 +34,7 @@ public class HardCodeInfos {
     private HardCodeInfos() {
         List<String> countiesListOfNorthernTaiwan = ImmutableList.<String>builder()
                 .add("基隆市")
-                .add("台北市")
+                .add("臺北市")
                 .add("新北市")
                 .add("桃園市")
                 .add("宜蘭縣")
@@ -43,7 +43,7 @@ public class HardCodeInfos {
                 .build();
         List<String> countiesListOfCentralTaiwan = ImmutableList.<String>builder()
                 .add("苗栗縣")
-                .add("台中市")
+                .add("臺中市")
                 .add("彰化縣")
                 .add("雲林縣")
                 .add("南投縣")
@@ -51,13 +51,13 @@ public class HardCodeInfos {
         List<String> countiesListOfSouthernTaiwan = ImmutableList.<String>builder()
                 .add("嘉義縣")
                 .add("嘉義市")
-                .add("台南市")
+                .add("臺南市")
                 .add("高雄市")
                 .add("屏東縣")
                 .build();
         List<String> countiesListOfEasternTaiwan = ImmutableList.<String>builder()
                 .add("花蓮縣")
-                .add("台東縣")
+                .add("臺東縣")
                 .build();
         List<String> countiesListOfTaiwanIslands = ImmutableList.<String>builder()
                 .add("澎湖縣")
