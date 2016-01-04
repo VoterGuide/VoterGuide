@@ -6,7 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
 
 import org.slf4j.Logger;
@@ -16,6 +19,9 @@ import java.lang.ref.WeakReference;
 
 public class MainFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(MainFragment.class);
+
+    @Bind(R.id.goto_guide_btn) TextView gotoGuideButton;
+    @Bind(R.id.goto_info_btn) TextView gotoInfoButton;
 
     public interface Callback {
         void gotoGuide();
@@ -32,36 +38,31 @@ public class MainFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        Button gotoGuideBtn = (Button) rootView.findViewById(R.id.goto_guide_btn);
-        Button gotoInfoBtn = (Button) rootView.findViewById(R.id.goto_info_btn);
+                View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        gotoGuideBtn.setOnClickListener(buttonListener);
-        gotoInfoBtn.setOnClickListener(buttonListener);
+                ButterKnife.bind(this, rootView);
+                gotoGuideButton.setOnClickListener(buttonListener);
+                gotoInfoButton.setOnClickListener(buttonListener);
 
-        return rootView;
-    }
-
-    private View.OnClickListener buttonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Callback callback = getCallback();
-            if (callback == null) {
-                return;
+                return rootView;
             }
 
-            switch (v.getId()) {
-                case R.id.goto_guide_btn:
-                    logger.error("go to guide btn clicked");
+            private View.OnClickListener buttonListener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Callback callback = getCallback();
+                    if (callback == null) {
+                        return;
+                    }
 
-                    callback.gotoGuide();
-                    break;
-                case R.id.goto_info_btn:
-                    logger.error("go to info btn clicked");
-
-                    callback.gotoInfo();
-                    break;
-            }
+                    switch (v.getId()) {
+                        case R.id.goto_guide_btn:
+                            callback.gotoGuide();
+                            break;
+                        case R.id.goto_info_btn:
+                            callback.gotoInfo();
+                            break;
+                    }
         }
     };
 
