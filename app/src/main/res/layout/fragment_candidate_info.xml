@@ -1,12 +1,28 @@
-<FrameLayout xmlns:android = "http://schemas.android.com/apk/res/android"
-             xmlns:tools = "http://schemas.android.com/tools"
-             android:layout_width = "match_parent"
-             android:layout_height = "match_parent"
-             tools:context = ".ui.info.CandidateInfoFragment">
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
+        android:id="@+id/candidate_name_textview"
         android:layout_width = "match_parent"
-        android:layout_height = "match_parent"
-        android:text = "info fragment"/>
+        android:layout_height = "wrap_content"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/candidate_gender_textview"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/candidate_name_textview" />
+
+    <TextView
+        android:id="@+id/candidate_party_textview"
+        android:layout_width = "match_parent"
+        android:layout_height = "wrap_content"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/candidate_gender_textview" />
+
+</RelativeLayout>

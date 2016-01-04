@@ -1,5 +1,6 @@
 package g0v.ly.android.voterguide.ui.info;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,7 +21,9 @@ import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,6 +33,8 @@ import g0v.ly.android.voterguide.ui.MainActivity;
 
 public class SelectCandidateFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(SelectCandidateFragment.class);
+
+    private Map<String, String> candidatesNameToUrlMap = new HashMap<>();
 
     @Bind(R.id.candidates_listview) ListView candidatesListView;
 
@@ -44,12 +49,8 @@ public class SelectCandidateFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        String selectedCountyString = getArguments().getString(MainActivity.KEY_FRAGMENT_TRANSACTION_BUNDLE_ARGUMENT);
-        logger.error("selectedCountyString: {}", selectedCountyString);
-
+        String selectedCountyString = getArguments().getString(MainActivity.KEY_FRAGMENT_BUNDLE_CANDIDATES_LIST);
         getCandidates(selectedCountyString);
-        //countiesListView.setAdapter(new ListViewAdapter());
-        //countiesListView.setOnItemClickListener(itemClickListener);
 
         return rootView;
     }
@@ -63,30 +64,34 @@ public class SelectCandidateFragment extends Fragment {
                     countryStringInEnglish = URLEncoder.encode(countyString, "UTF-8");
                 }
                 catch (UnsupportedEncodingException e) {
+                    logger.debug(e.getMessage());
                 }
 
                 String rawResultString = WebRequest.create()
                         .sendHttpRequestForResponse(WebRequest.G0V_LY_VOTE_API_URL, "ad=9&county=" + countryStringInEnglish);
 
-                logger.error("raw result: {}", rawResultString);
-
                 if (rawResultString != null) {
-                    final List<String> candidatesList = resultParser(rawResultString);
+                    candidatesNameToUrlMap = resultParser(rawResultString);
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            candidatesListView.setAdapter(new ListViewAdapter(candidatesList));
-                            candidatesListView.setOnItemClickListener(itemClickListener);
-                        }
-                    });
+                    final List<String> candidatesList = new ArrayList<>(candidatesNameToUrlMap.keySet());
+
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                candidatesListView.setAdapter(new ListViewAdapter(candidatesList));
+                                candidatesListView.setOnItemClickListener(itemClickListener);
+                            }
+                        });
+                    }
                 }
             }
         }).start();
     }
 
-    private List<String> resultParser(String rawResult) {
-        List<String> countyCandidates = new ArrayList<>();
+    private Map<String, String> resultParser(String rawResult) {
+        Map<String, String> countyCandidates = new HashMap<>();
 
         try {
             JSONObject rawObject = new JSONObject(rawResult);
@@ -94,10 +99,11 @@ public class SelectCandidateFragment extends Fragment {
 
             for (int i = 0; i < candidatesArray.length(); i++) {
                 JSONObject candidate = candidatesArray.getJSONObject(i);
-                countyCandidates.add(candidate.getString("name"));
+                countyCandidates.put(candidate.getString("name"), candidate.getString("url"));
             }
         }
         catch (JSONException e) {
+            logger.debug(e.getMessage());
         }
 
         return countyCandidates;
@@ -155,7 +161,15 @@ public class SelectCandidateFragment extends Fragment {
     private ListView.OnItemClickListener itemClickListener = new ListView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // TODO: goto candidate info
+
+            Activity activity = SelectCandidateFragment.this.getActivity();
+            if (activity instanceof MainActivity) {
+                List<String> candidatesList = new ArrayList<>(candidatesNameToUrlMap.keySet());
+                String candidateName = candidatesList.get(position);
+                String candidateInfoUrl = candidatesNameToUrlMap.get(candidateName);
+
+                ((MainActivity) activity).gotoFragmentWithState(MainActivity.State.STATE_INFO_CANDIDATE, candidateInfoUrl);
+            }
         }
     };
 }

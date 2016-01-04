@@ -137,14 +137,6 @@ public class WebRequest {
             httpUrlConnection.setConnectTimeout(CONNECT_TIMEOUT_IN_MILLIS);
             httpUrlConnection.setReadTimeout(SOCKET_TIMEOUT_IN_MILLIS);
 
-            // Detect http or https
-            /*
-            if (httpUrlConnection instanceof HttpsURLConnection) {
-                SSLSocketFactory sslSocketFactory = buildSslSocketFactory();
-                ((HttpsURLConnection) httpUrlConnection).setSSLSocketFactory(sslSocketFactory);
-            }
-            */
-
             // Basic authorization
             if (basicAuth != null) {
                 httpUrlConnection.setRequestProperty("Authorization", basicAuth);
@@ -175,30 +167,4 @@ public class WebRequest {
 
         return httpUrlConnection;
     }
-
-    /*
-    private static SSLSocketFactory buildSslSocketFactory() throws NoSuchAlgorithmException, KeyManagementException {
-        TrustManager[] trustManagers = {byPassTrustManager};
-
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, trustManagers, new SecureRandom());
-        return sslContext.getSocketFactory();
-    }
-
-    private static TrustManager byPassTrustManager = new X509TrustManager() {
-
-        @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) {
-        }
-
-        @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) {
-        }
-
-        @Override
-        public X509Certificate[] getAcceptedIssuers() {
-            return new X509Certificate[0];
-        }
-    };
-    */
 }

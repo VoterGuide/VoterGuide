@@ -10,17 +10,19 @@ import android.view.MenuItem;
 
 import g0v.ly.android.voterguide.R;
 import g0v.ly.android.voterguide.ui.guide.GuideFragment;
+import g0v.ly.android.voterguide.ui.info.CandidateInfoFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCandidateFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCountyFragment;
 
 public class MainActivity extends AppCompatActivity {
-    public static String KEY_FRAGMENT_TRANSACTION_BUNDLE_ARGUMENT = "key.fragment.transaction.bundle.argument";
+    public static String KEY_FRAGMENT_BUNDLE_CANDIDATES_LIST = "key.fragment.bundle.candidates.list";
+    public static String KEY_FRAGMENT_BUNDLE_CANDIDATE_INFO = "key.fragment.bundle.candidate.info";
 
     public enum State {
         STATE_MAIN("state.main"),
         STATE_GUIDE("state.guide"),
-        STATE_INFO_COUNTIES("state.info.counties"),
-        STATE_INFO_CANDIDATES("state.info.candidates"),
+        STATE_INFO_COUNTIES_LIST("state.info.counties"),
+        STATE_INFO_CANDIDATES_LIST("state.info.candidates"),
         STATE_INFO_CANDIDATE("state.info");
 
         private final String id;
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = fragmentManager.findFragmentByTag(state.id);
 
         boolean stacked = false;
+        Bundle args = null;
 
         switch (state) {
             case STATE_MAIN:
@@ -81,13 +84,33 @@ public class MainActivity extends AppCompatActivity {
                 fragment = GuideFragment.newFragment();
                 stacked = true;
                 break;
-            case STATE_INFO_COUNTIES:
+            case STATE_INFO_COUNTIES_LIST:
                 fragment = SelectCountyFragment.newFragment();
                 stacked = true;
                 break;
-            case STATE_INFO_CANDIDATES:
+            case STATE_INFO_CANDIDATES_LIST:
                 fragment = SelectCandidateFragment.newFragment();
                 stacked = true;
+
+                if (bundleMessages.length() > 0) {
+                    args = new Bundle();
+                    args.putString(KEY_FRAGMENT_BUNDLE_CANDIDATES_LIST, bundleMessages);
+                    fragment.setArguments(args);
+
+                    bundleMessages = "";
+                }
+                break;
+            case STATE_INFO_CANDIDATE:
+                fragment = CandidateInfoFragment.newFragment();
+                stacked = true;
+
+                if (bundleMessages.length() > 0) {
+                    args = new Bundle();
+                    args.putString(KEY_FRAGMENT_BUNDLE_CANDIDATE_INFO, bundleMessages);
+                    fragment.setArguments(args);
+
+                    bundleMessages = "";
+                }
                 break;
         }
 
@@ -96,13 +119,12 @@ public class MainActivity extends AppCompatActivity {
         if (stacked) {
             fragmentTransaction.addToBackStack(null);
         }
-        if (bundleMessages.length() > 0) {
-            Bundle args = new Bundle();
-            args.putString(KEY_FRAGMENT_TRANSACTION_BUNDLE_ARGUMENT, bundleMessages);
-            fragment.setArguments(args);
 
+        if (args != null) {
+            fragment.setArguments(args);
             bundleMessages = "";
         }
+
         fragmentTransaction.commit();
     }
 
@@ -116,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void gotoInfo() {
-            state = State.STATE_INFO_COUNTIES;
+            state = State.STATE_INFO_COUNTIES_LIST;
             launch(state);
 
         }

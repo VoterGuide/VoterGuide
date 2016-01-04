@@ -101,7 +101,7 @@ public class SelectCountyFragment extends Fragment {
             if (activity instanceof MainActivity) {
                 String selectedCountyString = counties.get(position);
 
-                ((MainActivity) activity).gotoFragmentWithState(MainActivity.State.STATE_INFO_CANDIDATES, selectedCountyString);
+                ((MainActivity) activity).gotoFragmentWithState(MainActivity.State.STATE_INFO_CANDIDATES_LIST, selectedCountyString);
             }
         }
     };
