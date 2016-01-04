@@ -2,9 +2,9 @@ package g0v.ly.android.voterguide.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,7 +14,7 @@ import g0v.ly.android.voterguide.ui.info.CandidateInfoFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCandidateFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCountyFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
     public static String KEY_FRAGMENT_BUNDLE_CANDIDATES_LIST = "key.fragment.bundle.candidates.list";
     public static String KEY_FRAGMENT_BUNDLE_CANDIDATE_INFO = "key.fragment.bundle.candidate.info";
 

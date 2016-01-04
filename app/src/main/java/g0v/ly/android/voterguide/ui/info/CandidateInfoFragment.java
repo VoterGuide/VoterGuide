@@ -121,25 +121,25 @@ public class CandidateInfoFragment extends Fragment {
      */
     private String composePhotoUrl(JSONObject jsonObject) {
         String url = "http://g0v-data.github.io/cec-crawler/images/";
-        String cityNo;
-        String cityName;
-        String number;
-        String name;
 
         try {
             JSONObject cecDataObject = jsonObject.getJSONObject("cec_data");
-            cityNo = cecDataObject.getString("cityno");
-            cityName = jsonObject.getString("county");
-            number = jsonObject.getString("number");
-            name = jsonObject.getString("name");
+            String cityNo = cecDataObject.getString("cityno");
+            String cityName = jsonObject.getString("county");
+            String number = jsonObject.getString("number");
+            String name = jsonObject.getString("name");
+            String sessionName = cecDataObject.getString("sessionname");
 
-            String paramString = cityNo + "-" + cityName + "-選舉區-" + number + "-" + name + ".jpg";
+
+            String paramString = cityNo + "-" + cityName + "-" + sessionName +"-" + number + "-" + name + ".jpg";
             paramString = URLEncoder.encode(paramString, "UTF-8");
             url += paramString;
         }
         catch (JSONException | UnsupportedEncodingException e) {
             logger.debug(e.getMessage());
         }
+
+        logger.debug("Candidate's photo url {}", url);
 
         return url;
     }
@@ -177,8 +177,13 @@ public class CandidateInfoFragment extends Fragment {
 
         try {
             stream = getHttpConnection(url);
-            bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
-            stream.close();
+            if (stream != null) {
+                bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
+                stream.close();
+            }
+            else {
+                logger.debug("Download candidate's photo failed.");
+            }
         } catch (IOException e) {
             logger.debug(e.getMessage());
         }

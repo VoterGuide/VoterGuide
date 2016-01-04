@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            style="@style/title_text"
+            style="@style/TextTitle"
             android:text="Guide"/>
 
     </RelativeLayout>
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:gravity="center"
-            style="@style/title_text"
+            style="@style/TextTitle"
             android:text="Info"/>
 
     </RelativeLayout>
