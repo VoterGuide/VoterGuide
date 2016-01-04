@@ -28,13 +28,13 @@ import g0v.ly.android.voterguide.R;
 import g0v.ly.android.voterguide.net.WebRequest;
 import g0v.ly.android.voterguide.ui.MainActivity;
 
-public class CountyCandidatesListFragment extends Fragment {
-    private static final Logger logger = LoggerFactory.getLogger(CountyCandidatesListFragment.class);
+public class SelectCandidateFragment extends Fragment {
+    private static final Logger logger = LoggerFactory.getLogger(SelectCandidateFragment.class);
 
     @Bind(R.id.candidates_listview) ListView candidatesListView;
 
-    public static CountyCandidatesListFragment newFragment() {
-        return new CountyCandidatesListFragment();
+    public static SelectCandidateFragment newFragment() {
+        return new SelectCandidateFragment();
     }
 
     @Nullable

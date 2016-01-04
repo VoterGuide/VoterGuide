@@ -17,7 +17,7 @@ public class CandidateInfoFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_info, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_candidate_info, container, false);
 
         // TODO: get views
 
