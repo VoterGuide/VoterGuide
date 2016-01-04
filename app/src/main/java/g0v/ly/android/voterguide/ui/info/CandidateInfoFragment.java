@@ -120,11 +120,11 @@ public class CandidateInfoFragment extends Fragment {
     Photo url : http://g0v-data.github.io/cec-crawler/images/018-新竹市-選舉區-3-林家宇.jpg
      */
     private String composePhotoUrl(JSONObject jsonObject) {
-        String url = "";
-        String cityNo = "";
-        String cityName = "";
-        String number = "";
-        String name = "";
+        String url = "http://g0v-data.github.io/cec-crawler/images/";
+        String cityNo;
+        String cityName;
+        String number;
+        String name;
 
         try {
             JSONObject cecDataObject = jsonObject.getJSONObject("cec_data");
@@ -133,9 +133,7 @@ public class CandidateInfoFragment extends Fragment {
             number = jsonObject.getString("number");
             name = jsonObject.getString("name");
 
-            url = "http://g0v-data.github.io/cec-crawler/images/";
             String paramString = cityNo + "-" + cityName + "-選舉區-" + number + "-" + name + ".jpg";
-
             paramString = URLEncoder.encode(paramString, "UTF-8");
             url += paramString;
         }
@@ -181,8 +179,8 @@ public class CandidateInfoFragment extends Fragment {
             stream = getHttpConnection(url);
             bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
             stream.close();
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            logger.debug(e.getMessage());
         }
         return bitmap;
     }
@@ -201,8 +199,8 @@ public class CandidateInfoFragment extends Fragment {
             if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 stream = httpConnection.getInputStream();
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            logger.debug(e.getMessage());
         }
         return stream;
     }
