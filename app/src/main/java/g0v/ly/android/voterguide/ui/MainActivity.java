@@ -17,6 +17,7 @@ import g0v.ly.android.voterguide.ui.info.CandidateInfoFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCandidateFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCountyFragment;
 import g0v.ly.android.voterguide.ui.info.SelectDistrictFragment;
+import g0v.ly.android.voterguide.ui.info.ViewPagerCandidateInfoFragment;
 
 public class MainActivity extends FragmentActivity {
     public static String BUNDLE_KEY_SELECTED_COUNTY_STRING = "bundle.key.selected.county";
@@ -112,7 +113,7 @@ public class MainActivity extends FragmentActivity {
                 fragment.setArguments(args);
                 break;
             case STATE_INFO_CANDIDATES_LIST:
-                fragment = SelectCandidateFragment.newFragment();
+                fragment = ViewPagerCandidateInfoFragment.newFragment();//SelectCandidateFragment.newFragment();
                 stacked = true;
 
                 String countyString = bundleMessages.get(BUNDLE_KEY_SELECTED_COUNTY_STRING);
@@ -127,15 +128,15 @@ public class MainActivity extends FragmentActivity {
                 fragment.setArguments(args);
                 break;
             case STATE_INFO_CANDIDATE:
-                fragment = CandidateInfoFragment.newFragment();
                 stacked = true;
 
                 args = new Bundle();
                 String nameString = bundleMessages.get(BUNDLE_KEY_SELECTED_CANDIDATE_NAME_STRING);
                 if (nameString != null) {
                     args.putString(BUNDLE_KEY_SELECTED_CANDIDATE_NAME_STRING, nameString);
+                    fragment = CandidateInfoFragment.newFragment(nameString);
+                    fragment.setArguments(args);
                 }
-                fragment.setArguments(args);
                 break;
         }
 
