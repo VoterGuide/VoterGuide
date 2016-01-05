@@ -11,36 +11,26 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
-import g0v.ly.android.voterguide.net.WebRequest;
+import g0v.ly.android.voterguide.model.Candidate;
+import g0v.ly.android.voterguide.model.CandidatesManager;
 import g0v.ly.android.voterguide.ui.MainActivity;
 
 public class CandidateInfoFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(CandidateInfoFragment.class);
 
-    private static final String KEY_CANDIDATE_INFO_NAME = "key.candidate.info.name";
-    private static final String KEY_CANDIDATE_INFO_GENDER = "key.candidate.info.gender";
-    private static final String KEY_CANDIDATE_INFO_PARTY = "key.candidate.info.party";
-    private static final String KEY_CANDIDATE_INFO_PHOTO = "key.candidate.info.photo";
-
-    private Map<String, String> candidateInfos = new HashMap<>();
+    private Candidate candidate;
 
     @Bind(R.id.candidate_photo_imageview) ImageView candidatePhotoImageView;
     @Bind(R.id.candidate_name_textview) TextView candidateNameTextView;
@@ -57,91 +47,20 @@ public class CandidateInfoFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        String selectedCandidateInfoUrl = getArguments().getString(MainActivity.KEY_FRAGMENT_BUNDLE_CANDIDATE_INFO);
-        getCandidateInfo(selectedCandidateInfoUrl);
+        String candidateName = getArguments().getString(MainActivity.KEY_FRAGMENT_BUNDLE_CANDIDATE_INFO);
+        CandidatesManager candidatesManager = CandidatesManager.getInstance();
+        candidate = candidatesManager.getCandidateWithName(candidateName);
+
+        if (candidate == null) {
+            // TODO: show error page
+            logger.warn("Fail to get candidate with name.");
+        }
+        else {
+            updateUi();
+            downloadAndShowCandidatePhoto(candidate.photoUrl);
+        }
 
         return rootView;
-    }
-
-    private void getCandidateInfo(final String url) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String rawResultString = WebRequest.create()
-                        .sendHttpRequestForResponse(url, "");
-
-                if (rawResultString != null) {
-                    try {
-                        candidateInfos = resultParser(new JSONObject(rawResultString));
-                    }
-                    catch (JSONException e) {
-                        e.printStackTrace();
-                        logger.debug(e.getMessage());
-                    }
-                }
-
-                downloadAndShowCandidatePhoto(candidateInfos.get(KEY_CANDIDATE_INFO_PHOTO));
-
-                if (candidateInfos.size() > 0) {
-                    Activity activity = getActivity();
-                    if (activity != null) {
-                        activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateUi();
-                            }
-                        });
-                    }
-                }
-            }
-        }).start();
-    }
-
-    private Map<String, String> resultParser(JSONObject jsonObject) {
-        Map<String, String> result = new HashMap<>();
-
-        try {
-            result.put(KEY_CANDIDATE_INFO_NAME, jsonObject.getString("name"));
-            result.put(KEY_CANDIDATE_INFO_GENDER, jsonObject.getString("gender"));
-            result.put(KEY_CANDIDATE_INFO_PARTY, jsonObject.getString("party"));
-
-            String photoUrl = composePhotoUrl(jsonObject);
-
-            result.put(KEY_CANDIDATE_INFO_PHOTO, photoUrl);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-    }
-
-    /*
-    Photo url : http://g0v-data.github.io/cec-crawler/images/018-新竹市-選舉區-3-林家宇.jpg
-     */
-    private String composePhotoUrl(JSONObject jsonObject) {
-        String url = "http://g0v-data.github.io/cec-crawler/images/";
-
-        try {
-            JSONObject cecDataObject = jsonObject.getJSONObject("cec_data");
-            String cityNo = cecDataObject.getString("cityno");
-            String cityName = jsonObject.getString("county");
-            String number = jsonObject.getString("number");
-            String name = jsonObject.getString("name");
-            String sessionName = cecDataObject.getString("sessionname");
-
-
-            String paramString = cityNo + "-" + cityName + "-" + sessionName +"-" + number + "-" + name + ".jpg";
-            paramString = URLEncoder.encode(paramString, "UTF-8");
-            url += paramString;
-        }
-        catch (JSONException | UnsupportedEncodingException e) {
-            logger.debug(e.getMessage());
-        }
-
-        logger.debug("Candidate's photo url {}", url);
-
-        return url;
     }
 
     private void downloadAndShowCandidatePhoto(final String photoUrl) {
@@ -164,9 +83,9 @@ public class CandidateInfoFragment extends Fragment {
     }
 
     private void updateUi() {
-        candidateNameTextView.setText(candidateInfos.get(KEY_CANDIDATE_INFO_NAME));
-        candidateGenderTextView.setText(candidateInfos.get(KEY_CANDIDATE_INFO_GENDER));
-        candidatePartyTextView.setText(candidateInfos.get(KEY_CANDIDATE_INFO_PARTY));
+        candidateNameTextView.setText(candidate.name);
+        candidateGenderTextView.setText(candidate.gender);
+        candidatePartyTextView.setText(candidate.party);
     }
 
     private Bitmap downloadImage(String url) {

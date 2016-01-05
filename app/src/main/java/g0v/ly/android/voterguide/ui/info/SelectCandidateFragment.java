@@ -12,7 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -21,20 +20,20 @@ import org.slf4j.LoggerFactory;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
+import g0v.ly.android.voterguide.model.Candidate;
+import g0v.ly.android.voterguide.model.CandidatesManager;
 import g0v.ly.android.voterguide.net.WebRequest;
 import g0v.ly.android.voterguide.ui.MainActivity;
 
 public class SelectCandidateFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(SelectCandidateFragment.class);
 
-    private Map<String, String> candidatesNameToUrlMap = new HashMap<>();
+    private List<Candidate> candidatesList = new ArrayList<>();
 
     @Bind(R.id.candidates_listview) ListView candidatesListView;
 
@@ -70,43 +69,27 @@ public class SelectCandidateFragment extends Fragment {
                 String rawResultString = WebRequest.create()
                         .sendHttpRequestForResponse(WebRequest.G0V_LY_VOTE_API_URL, "ad=9&county=" + countryStringInEnglish);
 
-                if (rawResultString != null) {
-                    candidatesNameToUrlMap = resultParser(rawResultString);
+                final CandidatesManager candidatesManager = CandidatesManager.getInstance();
+                try {
+                    candidatesManager.addCandidates(new JSONObject(rawResultString));
+                }
+                catch (JSONException e) {
+                    logger.debug(e.getMessage());
+                }
 
-                    final List<String> candidatesList = new ArrayList<>(candidatesNameToUrlMap.keySet());
-
-                    Activity activity = getActivity();
-                    if (activity != null) {
-                        activity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                candidatesListView.setAdapter(new ListViewAdapter(candidatesList));
-                                candidatesListView.setOnItemClickListener(itemClickListener);
-                            }
-                        });
-                    }
+                Activity activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            candidatesList = candidatesManager.getCandidatesWithCounty(countyString);
+                            candidatesListView.setAdapter(new ListViewAdapter(candidatesList));
+                            candidatesListView.setOnItemClickListener(itemClickListener);
+                        }
+                    });
                 }
             }
         }).start();
-    }
-
-    private Map<String, String> resultParser(String rawResult) {
-        Map<String, String> countyCandidates = new HashMap<>();
-
-        try {
-            JSONObject rawObject = new JSONObject(rawResult);
-            JSONArray candidatesArray = rawObject.getJSONArray("results");
-
-            for (int i = 0; i < candidatesArray.length(); i++) {
-                JSONObject candidate = candidatesArray.getJSONObject(i);
-                countyCandidates.put(candidate.getString("name"), candidate.getString("url"));
-            }
-        }
-        catch (JSONException e) {
-            logger.debug(e.getMessage());
-        }
-
-        return countyCandidates;
     }
 
     private class ListViewAdapter extends BaseAdapter {
@@ -114,9 +97,9 @@ public class SelectCandidateFragment extends Fragment {
             TextView candidateNameTextView;
         }
 
-        List<String> candidates = new ArrayList<>();
+        List<Candidate> candidates = new ArrayList<>();
 
-        public ListViewAdapter(List<String> candidates) {
+        public ListViewAdapter(List<Candidate> candidates) {
             this.candidates = candidates;
         }
 
@@ -152,7 +135,7 @@ public class SelectCandidateFragment extends Fragment {
                 viewHolder = (ViewHolder) rowView.getTag();
             }
 
-            viewHolder.candidateNameTextView.setText(candidates.get(position));
+            viewHolder.candidateNameTextView.setText(candidates.get(position).name);
 
             return rowView;
         }
@@ -164,11 +147,9 @@ public class SelectCandidateFragment extends Fragment {
 
             Activity activity = SelectCandidateFragment.this.getActivity();
             if (activity instanceof MainActivity) {
-                List<String> candidatesList = new ArrayList<>(candidatesNameToUrlMap.keySet());
-                String candidateName = candidatesList.get(position);
-                String candidateInfoUrl = candidatesNameToUrlMap.get(candidateName);
+                String candidateName = candidatesList.get(position).name;
 
-                ((MainActivity) activity).gotoFragmentWithState(MainActivity.State.STATE_INFO_CANDIDATE, candidateInfoUrl);
+                ((MainActivity) activity).gotoFragmentWithState(MainActivity.State.STATE_INFO_CANDIDATE, candidateName);
             }
         }
     };
