@@ -5,8 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,8 +19,9 @@ import java.lang.ref.WeakReference;
 public class MainFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(MainFragment.class);
 
-    @Bind(R.id.goto_guide_btn) TextView gotoGuideButton;
-    @Bind(R.id.goto_info_btn) TextView gotoInfoButton;
+    @Bind(R.id.goto_guide_btn)
+    RelativeLayout gotoGuideButton;
+    @Bind(R.id.goto_info_btn) RelativeLayout gotoInfoButton;
 
     public interface Callback {
         void gotoGuide();
