@@ -6,6 +6,7 @@
         android:id="@+id/county_title_textview"
         android:layout_width="match_parent"
         android:layout_height="55dp"
+        android:layout_margin="10dp"
         android:gravity="center"
         android:layout_centerInParent="true"
         style="@style/TextContent"/>
