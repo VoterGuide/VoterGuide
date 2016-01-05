@@ -16,16 +16,15 @@ android:layout_width="match_parent" android:layout_height="match_parent">
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
         android:layout_marginTop="160dp"
-        android:layout_centerHorizontal="true"
+        android:gravity="start"
         style="@style/TextContent"/>
 
     <TextView
         android:id="@+id/candidate_gender_textview"
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
-        android:layout_margin="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/candidate_name_textview"
+        android:layout_marginTop="160dp"
+        android:gravity="end"
         style="@style/TextContent"/>
 
     <TextView
