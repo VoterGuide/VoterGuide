@@ -37,13 +37,14 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    private State state = State.STATE_MAIN;
+    private State state;
     private Map<String, String> bundleMessages = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        state = State.STATE_MAIN;
     }
 
     @Override
@@ -75,15 +76,19 @@ public class MainActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void launch(State state) {
+    private void launch(State newState) {
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentByTag(state.id);
+        Fragment fragment = fragmentManager.findFragmentByTag(newState.id);
+
+        if (state != null && state == newState && fragment != null) {
+            return;
+        }
 
         boolean stacked = false;
         Bundle args;
         String districtString;
 
-        switch (state) {
+        switch (newState) {
             case STATE_MAIN:
                 fragment = MainFragment.newFragment(mainFragmentCallback);
                 break;
@@ -135,13 +140,12 @@ public class MainActivity extends FragmentActivity {
         }
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragmentHolder, fragment, state.id);
+        fragmentTransaction.replace(R.id.fragmentHolder, fragment, newState.id);
         if (stacked) {
             fragmentTransaction.addToBackStack(null);
         }
 
         fragmentTransaction.commit();
-        bundleMessages.clear();
     }
 
     private MainFragment.Callback mainFragmentCallback = new MainFragment.Callback() {
@@ -162,6 +166,7 @@ public class MainActivity extends FragmentActivity {
 
     public void gotoFragmentWithState(State state, Map<String, String> messages) {
         this.state = state;
+        bundleMessages.clear();
         bundleMessages = messages;
         launch(this.state);
     }

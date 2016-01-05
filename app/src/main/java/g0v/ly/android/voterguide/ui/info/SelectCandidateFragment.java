@@ -31,6 +31,8 @@ public class SelectCandidateFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(SelectCandidateFragment.class);
 
     private List<Candidate> candidatesList = new ArrayList<>();
+    private String selectedCountyString;
+    private String selectedDistrictString;
 
     @Bind(R.id.candidates_listview) ListView candidatesListView;
 
@@ -46,17 +48,31 @@ public class SelectCandidateFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         final Bundle arguments = getArguments();
+        if (arguments.containsKey(MainActivity.BUNDLE_KEY_SELECTED_COUNTY_STRING)) {
+            selectedCountyString = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_COUNTY_STRING);
+        }
+        if (arguments.containsKey(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING)) {
+            selectedDistrictString = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING);
+        }
 
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        downloadCandidates();
+    }
+
+    private void downloadCandidates() {
         // XXX: callback or future
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if (arguments.containsKey(MainActivity.BUNDLE_KEY_SELECTED_COUNTY_STRING)) {
-                    String selectedCountyString = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_COUNTY_STRING);
+                if (selectedCountyString != null) {
                     getCandidatesWithCounty(selectedCountyString);
                 }
-                if (arguments.containsKey(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING)) {
-                    String selectedDistrictString = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING);
+                if (selectedDistrictString != null) {
                     getCandidatesWithDistrict(selectedDistrictString);
                 }
 
@@ -72,10 +88,7 @@ public class SelectCandidateFragment extends Fragment {
                 }
             }
         }).start();
-
-        return rootView;
     }
-
 
     private void getCandidatesWithCounty(String countyString) {
         CandidatesManager candidatesManager = CandidatesManager.getInstance();
