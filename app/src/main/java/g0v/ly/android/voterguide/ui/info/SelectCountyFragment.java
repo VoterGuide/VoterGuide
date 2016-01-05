@@ -13,11 +13,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
+import g0v.ly.android.voterguide.model.ElectionDistrictManager;
 import g0v.ly.android.voterguide.ui.MainActivity;
 import g0v.ly.android.voterguide.utilities.HardCodeInfos;
 
@@ -101,8 +104,26 @@ public class SelectCountyFragment extends Fragment {
             if (activity instanceof MainActivity) {
                 String selectedCountyString = counties.get(position);
 
-                ((MainActivity) activity).gotoFragmentWithState(MainActivity.State.STATE_INFO_CANDIDATES_LIST, selectedCountyString);
+                boolean isCountyHasMultipleDistrict = isCountyHasMultipleDistrict(selectedCountyString);
+                MainActivity.State state;
+                Map<String, String> params = new HashMap<>();
+
+                if (isCountyHasMultipleDistrict) {
+                    state = MainActivity.State.STATE_INFO_DISTRICT_LIST;
+                    params.put(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING, selectedCountyString);
+                }
+                else {
+                    state = MainActivity.State.STATE_INFO_CANDIDATES_LIST;
+                    params.put(MainActivity.BUNDLE_KEY_SELECTED_COUNTY_STRING, selectedCountyString);
+                }
+
+                ((MainActivity) activity).gotoFragmentWithState(state, params);
             }
         }
     };
+
+    private boolean isCountyHasMultipleDistrict(String selectedCountyString) {
+        ElectionDistrictManager electionDistrictManager = ElectionDistrictManager.getInstance();
+        return electionDistrictManager.isCountyHasMultipleDistrict(selectedCountyString);
+    }
 }

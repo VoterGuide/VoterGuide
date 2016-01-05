@@ -47,7 +47,7 @@ public class CandidateInfoFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        String candidateName = getArguments().getString(MainActivity.KEY_FRAGMENT_BUNDLE_CANDIDATE_INFO);
+        String candidateName = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_NAME_STRING);
         CandidatesManager candidatesManager = CandidatesManager.getInstance();
         candidate = candidatesManager.getCandidateWithName(candidateName);
 
