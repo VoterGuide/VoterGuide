@@ -31,37 +31,6 @@ public class HardCodeInfos {
         Others
     }
 
-    /*
-    public enum Districts {
-        臺北市("臺北市"),
-        新北市("新北市"),
-        桃園市("桃園市"),
-        苗栗縣("苗栗縣"),
-        臺中市("臺中市"),
-        彰化縣("彰化縣"),
-        雲林縣("雲林縣"),
-        南投縣("南投縣"),
-        嘉義縣("嘉義縣"),
-        臺南市("臺南市"),
-        高雄市("高雄市"),
-        屏東縣("屏東縣");
-
-        private final String name;
-
-        Districts(String s) {
-            name = s;
-        }
-
-        public boolean equalsName(String otherName) {
-            return (otherName != null) && name.equals(otherName);
-        }
-
-        public String toString() {
-            return this.name;
-        }
-    }
-    */
-
     private Map<TaiwanRegions, List<String>> countiesOfTaiwan = new HashMap<>();
     private List<ElectionDistrict> electionDistricts = new ArrayList<>();
 
