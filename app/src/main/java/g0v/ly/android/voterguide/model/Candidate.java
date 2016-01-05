@@ -44,8 +44,10 @@ public class Candidate {
         }
     }
 
-    /*
-    Photo url : http://g0v-data.github.io/cec-crawler/images/018-新竹市-選舉區-3-林家宇.jpg
+    /**
+     * http://g0v-data.github.io/cec-crawler/images/[cityno]-[county]-[sessionname]-[number]-[name].jpg
+     * e.g. http://g0v-data.github.io/cec-crawler/images/018-新竹市-選舉區-3-林家宇.jpg
+     * @return photoURl
      */
     private String composePhotoUrl() {
         String url = "http://g0v-data.github.io/cec-crawler/images/";
@@ -60,4 +62,6 @@ public class Candidate {
 
         return url;
     }
+
+    // TODO: download photo (ListenableFuture)
 }
