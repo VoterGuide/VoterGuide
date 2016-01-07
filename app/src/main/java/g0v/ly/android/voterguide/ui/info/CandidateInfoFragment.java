@@ -25,7 +25,6 @@ import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
 import g0v.ly.android.voterguide.model.Candidate;
 import g0v.ly.android.voterguide.model.CandidatesManager;
-import g0v.ly.android.voterguide.ui.MainActivity;
 
 public class CandidateInfoFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(CandidateInfoFragment.class);
