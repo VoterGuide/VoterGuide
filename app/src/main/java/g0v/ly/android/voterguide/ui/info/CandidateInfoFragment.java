@@ -25,11 +25,11 @@ import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
 import g0v.ly.android.voterguide.model.Candidate;
 import g0v.ly.android.voterguide.model.CandidatesManager;
-import g0v.ly.android.voterguide.ui.MainActivity;
 
 public class CandidateInfoFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(CandidateInfoFragment.class);
 
+    private String candidateName;
     private Candidate candidate;
 
     @Bind(R.id.candidate_photo_imageview) ImageView candidatePhotoImageView;
@@ -37,8 +37,12 @@ public class CandidateInfoFragment extends Fragment {
     @Bind(R.id.candidate_gender_textview) TextView candidateGenderTextView;
     @Bind(R.id.candidate_party_textview) TextView candidatePartyTextView;
 
-    public static CandidateInfoFragment newFragment() {
-        return new CandidateInfoFragment();
+    public static CandidateInfoFragment newFragment(String name) {
+        return new CandidateInfoFragment(name);
+    }
+
+    public CandidateInfoFragment(String candidateName) {
+        this.candidateName = candidateName;
     }
 
     @Override
@@ -47,7 +51,7 @@ public class CandidateInfoFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        String candidateName = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_NAME_STRING);
+        //String candidateName = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_NAME_STRING);
         CandidatesManager candidatesManager = CandidatesManager.getInstance();
         candidate = candidatesManager.getCandidateWithName(candidateName);
 
