@@ -1,5 +1,6 @@
 package g0v.ly.android.voterguide.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,33 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.lang.ref.WeakReference;
-
 public class MainFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(MainFragment.class);
 
-    @Bind(R.id.goto_guide_btn)
-    RelativeLayout gotoGuideButton;
+    @Bind(R.id.goto_guide_btn) RelativeLayout gotoGuideButton;
     @Bind(R.id.goto_info_btn) RelativeLayout gotoInfoButton;
 
-    public interface Callback {
-        void gotoGuide();
-        void gotoInfo();
-    }
-
-    private WeakReference<Callback> callbackRef;
-
-    public static MainFragment newFragment(Callback cb) {
-        MainFragment fragment = new MainFragment();
-        fragment.setCallback(cb);
-        return fragment;
+    public static MainFragment newFragment() {
+        return new MainFragment();
     }
 
     @Override
@@ -50,30 +39,20 @@ public class MainFragment extends Fragment {
             private View.OnClickListener buttonListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Callback callback = getCallback();
-                    if (callback == null) {
+                    Activity activity = getActivity();
+                    if (activity == null || !(activity instanceof MainActivity)) {
+                        logger.debug("Failed to get activity.");
                         return;
                     }
 
                     switch (v.getId()) {
                         case R.id.goto_guide_btn:
-                            callback.gotoGuide();
+                            ((MainActivity) activity).gotoFragmentWithState(MainActivity.State.STATE_GUIDE, null);
                             break;
                         case R.id.goto_info_btn:
-                            callback.gotoInfo();
+                            ((MainActivity) activity).gotoFragmentWithState(MainActivity.State.STATE_INFO_COUNTIES_LIST, null);
                             break;
                     }
         }
     };
-
-    public void setCallback(Callback cb) {
-        callbackRef = new WeakReference<Callback>(cb);
-    }
-
-    public Callback getCallback() {
-        if (callbackRef != null) {
-            return callbackRef.get();
-        }
-        return null;
-    }
 }

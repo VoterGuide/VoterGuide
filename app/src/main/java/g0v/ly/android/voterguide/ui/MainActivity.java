@@ -14,7 +14,6 @@ import java.util.Map;
 import g0v.ly.android.voterguide.R;
 import g0v.ly.android.voterguide.ui.guide.GuideFragment;
 import g0v.ly.android.voterguide.ui.info.CandidateInfoFragment;
-import g0v.ly.android.voterguide.ui.info.SelectCandidateFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCountyFragment;
 import g0v.ly.android.voterguide.ui.info.SelectDistrictFragment;
 import g0v.ly.android.voterguide.ui.info.ViewPagerCandidateInfoFragment;
@@ -91,7 +90,7 @@ public class MainActivity extends FragmentActivity {
 
         switch (newState) {
             case STATE_MAIN:
-                fragment = MainFragment.newFragment(mainFragmentCallback);
+                fragment = MainFragment.newFragment();
                 break;
             case STATE_GUIDE:
                 fragment = GuideFragment.newFragment();
@@ -149,25 +148,11 @@ public class MainActivity extends FragmentActivity {
         fragmentTransaction.commit();
     }
 
-    private MainFragment.Callback mainFragmentCallback = new MainFragment.Callback() {
-
-        @Override
-        public void gotoGuide() {
-            state = State.STATE_GUIDE;
-            launch(state);
-        }
-
-        @Override
-        public void gotoInfo() {
-            state = State.STATE_INFO_COUNTIES_LIST;
-            launch(state);
-
-        }
-    };
-
     public void gotoFragmentWithState(State state, Map<String, String> messages) {
         this.state = state;
-        bundleMessages.clear();
+        if (bundleMessages != null) {
+            bundleMessages.clear();
+        }
         bundleMessages = messages;
         launch(this.state);
     }
