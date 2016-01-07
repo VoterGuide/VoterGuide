@@ -1,5 +1,8 @@
 package g0v.ly.android.voterguide.model;
 
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import g0v.ly.android.voterguide.net.WebRequest;
 
@@ -17,6 +21,7 @@ public class CandidatesManager {
     private static final Logger logger = LoggerFactory.getLogger(CandidatesManager.class);
 
     private static CandidatesManager instance;
+    private ListeningExecutorService servicePool = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
 
     private List<Candidate> allCandidates = new ArrayList<>();
 
@@ -33,7 +38,7 @@ public class CandidatesManager {
 
     /**
      * Blocking method
-     * @param county
+     * @param county - Candidate's election county
      * @return Candidate list
      */
     public List<Candidate> getCandidatesWithCounty(String county) {
@@ -91,7 +96,7 @@ public class CandidatesManager {
 
             for (int i = 0; i < candidatesArray.length(); i++) {
                 JSONObject candidateObject = candidatesArray.getJSONObject(i);
-                Candidate candidate = new Candidate(candidateObject);
+                Candidate candidate = new Candidate(candidateObject, servicePool);
                 candidates.add(candidate);
             }
         }

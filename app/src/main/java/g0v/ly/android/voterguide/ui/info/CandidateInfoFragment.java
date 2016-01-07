@@ -2,7 +2,6 @@ package g0v.ly.android.voterguide.ui.info;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,15 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
@@ -27,10 +17,7 @@ import g0v.ly.android.voterguide.model.Candidate;
 import g0v.ly.android.voterguide.model.CandidatesManager;
 
 public class CandidateInfoFragment extends Fragment {
-    private static final Logger logger = LoggerFactory.getLogger(CandidateInfoFragment.class);
-
     private String candidateName;
-    private Candidate candidate;
 
     @Bind(R.id.candidate_photo_imageview) ImageView candidatePhotoImageView;
     @Bind(R.id.candidate_name_textview) TextView candidateNameTextView;
@@ -41,7 +28,7 @@ public class CandidateInfoFragment extends Fragment {
         return new CandidateInfoFragment(name);
     }
 
-    public CandidateInfoFragment(String candidateName) {
+    private CandidateInfoFragment(String candidateName) {
         this.candidateName = candidateName;
     }
 
@@ -52,83 +39,33 @@ public class CandidateInfoFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         CandidatesManager candidatesManager = CandidatesManager.getInstance();
-        candidate = candidatesManager.getCandidateWithName(candidateName);
+        Candidate candidate = candidatesManager.getCandidateWithName(candidateName);
+        candidate.setCallback(candidatePhotoDownloadCallback);
 
-        if (candidate == null) {
-            // TODO: show error page
-            logger.warn("Fail to get candidate with name.");
-        }
-        else {
-            updateUi();
-            downloadAndShowCandidatePhoto(candidate.photoUrl);
+        candidateNameTextView.setText(candidate.name);
+        candidateGenderTextView.setText(candidate.gender);
+        candidatePartyTextView.setText(candidate.party);
+
+        Bitmap photo = candidate.photo;
+        if (photo != null) {
+            candidatePhotoImageView.setImageBitmap(photo);
         }
 
         return rootView;
     }
 
-    private void downloadAndShowCandidatePhoto(final String photoUrl) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final Bitmap map = downloadImage(photoUrl);
-
-                Activity activity = getActivity();
-                if (activity != null) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            candidatePhotoImageView.setImageBitmap(map);
-                        }
-                    });
-                }
+    private Candidate.Callback candidatePhotoDownloadCallback = new Candidate.Callback() {
+        @Override
+        public void onPhotoDownloadComplete(final Bitmap photo) {
+            Activity activity = getActivity();
+            if (activity != null) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        candidatePhotoImageView.setImageBitmap(photo);
+                    }
+                });
             }
-        }).start();
-    }
-
-    private void updateUi() {
-        candidateNameTextView.setText(candidate.name);
-        candidateGenderTextView.setText(candidate.gender);
-        candidatePartyTextView.setText(candidate.party);
-    }
-
-    private Bitmap downloadImage(String url) {
-        Bitmap bitmap = null;
-        InputStream stream;
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inSampleSize = 1;
-
-        try {
-            stream = getHttpConnection(url);
-            if (stream != null) {
-                bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
-                stream.close();
-            }
-            else {
-                logger.debug("Download candidate's photo failed.");
-            }
-        } catch (IOException e) {
-            logger.debug(e.getMessage());
         }
-        return bitmap;
-    }
-
-    // Makes HttpURLConnection and returns InputStream
-    private InputStream getHttpConnection(String urlString) throws IOException {
-        InputStream stream = null;
-        URL url = new URL(urlString);
-        URLConnection connection = url.openConnection();
-
-        try {
-            HttpURLConnection httpConnection = (HttpURLConnection) connection;
-            httpConnection.setRequestMethod("GET");
-            httpConnection.connect();
-
-            if (httpConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                stream = httpConnection.getInputStream();
-            }
-        } catch (Exception e) {
-            logger.debug(e.getMessage());
-        }
-        return stream;
-    }
+    };
 }

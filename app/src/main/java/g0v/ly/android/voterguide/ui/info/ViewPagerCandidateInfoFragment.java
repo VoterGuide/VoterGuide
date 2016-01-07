@@ -70,7 +70,7 @@ public class ViewPagerCandidateInfoFragment extends Fragment {
                 }
 
                 for (Candidate candidate : candidatesList) {
-                    fragments.add(new CandidateInfoFragment(candidate.name));
+                    fragments.add(CandidateInfoFragment.newFragment(candidate.name));
                 }
 
                 Activity activity = getActivity();
