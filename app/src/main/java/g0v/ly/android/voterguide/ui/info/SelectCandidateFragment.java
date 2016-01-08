@@ -12,13 +12,12 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,8 +26,9 @@ import g0v.ly.android.voterguide.model.Candidate;
 import g0v.ly.android.voterguide.model.CandidatesManager;
 import g0v.ly.android.voterguide.ui.MainActivity;
 
-public class SelectCandidateFragment extends Fragment {
-    private static final Logger logger = LoggerFactory.getLogger(SelectCandidateFragment.class);
+public class SelectCandidateFragment extends Fragment implements Observer {
+
+    private ListViewAdapter adapter = new ListViewAdapter();
 
     private List<Candidate> candidatesList = new ArrayList<>();
     private String selectedCountyString;
@@ -38,6 +38,12 @@ public class SelectCandidateFragment extends Fragment {
 
     public static SelectCandidateFragment newFragment() {
         return new SelectCandidateFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        CandidatesManager.getInstance().addObserver(this);
     }
 
     @Nullable
@@ -55,54 +61,48 @@ public class SelectCandidateFragment extends Fragment {
             selectedDistrictString = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING);
         }
 
+        getCandidates();
+        candidatesListView.setAdapter(adapter);
+        candidatesListView.setOnItemClickListener(itemClickListener);
         return rootView;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        downloadCandidates();
+    public void onDestroy() {
+        super.onDestroy();
+        CandidatesManager.getInstance().deleteObserver(this);
     }
 
-    private void downloadCandidates() {
-        // XXX: callback or future
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (selectedCountyString != null) {
-                    getCandidatesWithCounty(selectedCountyString);
-                }
-                if (selectedDistrictString != null) {
-                    getCandidatesWithDistrict(selectedDistrictString);
-                }
-
-                Activity activity = getActivity();
-                if (activity != null) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            candidatesListView.setAdapter(new ListViewAdapter(candidatesList));
-                            candidatesListView.setOnItemClickListener(itemClickListener);
-                        }
-                    });
-                }
-            }
-        }).start();
-    }
-
-    private void getCandidatesWithCounty(String countyString) {
-        CandidatesManager candidatesManager = CandidatesManager.getInstance();
-        candidatesList = candidatesManager.getCandidatesWithCounty(countyString);
-    }
-
-    private void getCandidatesWithDistrict(String districtString) {
-        List<Candidate> tempCandidates = new ArrayList<>();
-        for (Candidate candidate : candidatesList) {
-            if (candidate.district.equals(districtString)) {
-                tempCandidates.add(candidate);
-            }
+    private void getCandidates() {
+        if (selectedCountyString != null) {
+            CandidatesManager candidatesManager = CandidatesManager.getInstance();
+            candidatesList = candidatesManager.getCandidatesWithCounty(selectedCountyString);
         }
-        candidatesList = tempCandidates;
+        if (selectedDistrictString != null) {
+            List<Candidate> tempCandidates = new ArrayList<>();
+            for (Candidate candidate : candidatesList) {
+                if (candidate.district.equals(selectedDistrictString)) {
+                    tempCandidates.add(candidate);
+                }
+            }
+            candidatesList = tempCandidates;
+        }
+
+        adapter.setList(candidatesList);
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getCandidates();
+                }
+            });
+        }
     }
 
     private class ListViewAdapter extends BaseAdapter {
@@ -112,7 +112,7 @@ public class SelectCandidateFragment extends Fragment {
 
         List<Candidate> candidates = new ArrayList<>();
 
-        public ListViewAdapter(List<Candidate> candidates) {
+        public void setList(List<Candidate> candidates) {
             this.candidates = candidates;
         }
 

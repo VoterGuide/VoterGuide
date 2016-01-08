@@ -13,11 +13,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 import java.util.concurrent.Executors;
 
 import g0v.ly.android.voterguide.net.WebRequest;
 
-public class CandidatesManager {
+public class CandidatesManager extends Observable {
     private static final Logger logger = LoggerFactory.getLogger(CandidatesManager.class);
 
     private static CandidatesManager instance;
@@ -37,13 +38,12 @@ public class CandidatesManager {
     }
 
     /**
-     * Blocking method
+     * Return select county's candidate list, return empty list and start download if select county's list not download before.
      * @param county - Candidate's election county
-     * @return Candidate list
      */
     public List<Candidate> getCandidatesWithCounty(String county) {
-        boolean hasDownloadBefore = false;
         List<Candidate> candidates = new ArrayList<>();
+        boolean hasDownloadBefore = false;
 
         for (Candidate candidate : allCandidates) {
             if (candidate.county.equals(county)) {
@@ -60,8 +60,7 @@ public class CandidatesManager {
             }
         }
         else {
-            candidates = downloadCandidatesOfCounty(county);
-            allCandidates.addAll(candidates);
+            downloadCandidatesOfCounty(county);
         }
 
         return candidates;
@@ -77,42 +76,51 @@ public class CandidatesManager {
         return null;
     }
 
-    private List<Candidate> downloadCandidatesOfCounty(String countyString) {
-        List<Candidate> candidates = new ArrayList<>();
-        String countryStringInEnglish = "";
-        try {
-            countryStringInEnglish = URLEncoder.encode(countyString, "UTF-8");
-        }
-        catch (UnsupportedEncodingException e) {
-            logger.debug(e.getMessage());
-        }
+    private void downloadCandidatesOfCounty(final String countyString) {
 
-        boolean hasNextPage = false;
-        int page = 0;
-        do {
-            page++;
-            logger.debug("Load {} candidate list, page: {}", countyString, page);
-
-            String rawResultString = WebRequest.create()
-                    .sendHttpRequestForResponse(WebRequest.G0V_LY_VOTE_API_URL, "ad=9&page=" + page + "&county=" + countryStringInEnglish);
-            try {
-                JSONObject rawObject = new JSONObject(rawResultString);
-                JSONArray candidatesArray = rawObject.getJSONArray("results");
-
-                for (int i = 0; i < candidatesArray.length(); i++) {
-                    JSONObject candidateObject = candidatesArray.getJSONObject(i);
-                    Candidate candidate = new Candidate(candidateObject, servicePool);
-                    candidates.add(candidate);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Candidate> candidates;
+                String countryStringInEnglish = "";
+                try {
+                    countryStringInEnglish = URLEncoder.encode(countyString, "UTF-8");
+                }
+                catch (UnsupportedEncodingException e) {
+                    logger.debug(e.getMessage());
                 }
 
-                hasNextPage = rawObject.has("next") && !rawObject.getString("next").equals("null");
-            }
-            catch (JSONException e) {
-                logger.debug(e.getMessage());
-            }
-        }
-        while(hasNextPage);
+                boolean hasNextPage = false;
+                int page = 0;
+                do {
+                    page++;
+                    candidates = new ArrayList<>();
+                    logger.debug("Load {} candidate list, page: {}", countyString, page);
 
-        return candidates;
+                    String rawResultString = WebRequest.create()
+                            .sendHttpRequestForResponse(WebRequest.G0V_LY_VOTE_API_URL, "ad=9&page=" + page + "&county=" + countryStringInEnglish);
+                    try {
+                        JSONObject rawObject = new JSONObject(rawResultString);
+                        JSONArray candidatesArray = rawObject.getJSONArray("results");
+
+                        for (int i = 0; i < candidatesArray.length(); i++) {
+                            JSONObject candidateObject = candidatesArray.getJSONObject(i);
+                            Candidate candidate = new Candidate(candidateObject, servicePool);
+                            candidates.add(candidate);
+                        }
+
+                        hasNextPage = rawObject.has("next") && !rawObject.getString("next").equals("null");
+
+                        setChanged();
+                        notifyObservers();
+                        allCandidates.addAll(candidates);
+                    }
+                    catch (JSONException e) {
+                        logger.debug(e.getMessage());
+                    }
+                }
+                while(hasNextPage);
+            }
+        }).start();
     }
 }

@@ -104,6 +104,8 @@ public class SelectCountyFragment extends Fragment {
             if (activity instanceof MainActivity) {
                 String selectedCountyString = counties.get(position);
 
+                // TODO: download select county's candidate list
+
                 boolean isCountyHasMultipleDistrict = isCountyHasMultipleDistrict(selectedCountyString);
                 MainActivity.State state;
                 Map<String, String> params = new HashMap<>();

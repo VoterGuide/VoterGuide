@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -13,6 +14,8 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,7 +24,8 @@ import g0v.ly.android.voterguide.model.Candidate;
 import g0v.ly.android.voterguide.model.CandidatesManager;
 import g0v.ly.android.voterguide.ui.MainActivity;
 
-public class ViewPagerCandidateInfoFragment extends Fragment {
+public class ViewPagerCandidateInfoFragment extends Fragment implements Observer {
+    private PagerAdapter pagerAdapter;
 
     private List<Candidate> candidatesList = new ArrayList<>();
     private List<CandidateInfoFragment> fragments = new ArrayList<>();
@@ -38,6 +42,18 @@ public class ViewPagerCandidateInfoFragment extends Fragment {
     private ViewPagerCandidateInfoFragment() {
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        CandidatesManager.getInstance().addObserver(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        CandidatesManager.getInstance().deleteObserver(this);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,57 +68,50 @@ public class ViewPagerCandidateInfoFragment extends Fragment {
         if (arguments.containsKey(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING)) {
             selectedDistrictString = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING);
         }
-        downloadCandidates();
+        getCandidates();
+
+        pagerAdapter = new ViewPagerAdapter(ViewPagerCandidateInfoFragment.this);
 
         return rootView;
     }
 
-    private void downloadCandidates() {
-        // XXX: callback or future
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (selectedCountyString != null) {
-                    getCandidatesWithCounty(selectedCountyString);
-                }
-                if (selectedDistrictString != null) {
-                    getCandidatesWithDistrict(selectedDistrictString);
-                }
-
-                for (Candidate candidate : candidatesList) {
-                    fragments.add(CandidateInfoFragment.newFragment(candidate.name));
-                }
-
-                Activity activity = getActivity();
-                if (activity != null) {
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            PagerAdapter pagerAdapter = new ViewPagerAdapter(ViewPagerCandidateInfoFragment.this);
-                            viewPager.setAdapter(pagerAdapter);
-                        }
-                    });
+    private void getCandidates() {
+        if (selectedCountyString != null) {
+            CandidatesManager candidatesManager = CandidatesManager.getInstance();
+            candidatesList = candidatesManager.getCandidatesWithCounty(selectedCountyString);
+        }
+        if (selectedDistrictString != null) {
+            List<Candidate> tempCandidates = new ArrayList<>();
+            for (Candidate candidate : candidatesList) {
+                if (candidate.district.equals(selectedDistrictString)) {
+                    tempCandidates.add(candidate);
                 }
             }
-        }).start();
-    }
+            candidatesList = tempCandidates;
+        }
 
-    private void getCandidatesWithCounty(String countyString) {
-        CandidatesManager candidatesManager = CandidatesManager.getInstance();
-        candidatesList = candidatesManager.getCandidatesWithCounty(countyString);
-    }
-
-    private void getCandidatesWithDistrict(String districtString) {
-        List<Candidate> tempCandidates = new ArrayList<>();
-        for (Candidate candidate : candidatesList) {
-            if (candidate.district.equals(districtString)) {
-                tempCandidates.add(candidate);
+        if (candidatesList.size() > 0) {
+            for (Candidate candidate : candidatesList) {
+                fragments.add(CandidateInfoFragment.newFragment(candidate.name));
             }
         }
-        candidatesList = tempCandidates;
+        viewPager.setAdapter(pagerAdapter);
     }
 
-    public class ViewPagerAdapter extends FragmentPagerAdapter {
+    @Override
+    public void update(Observable observable, Object data) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getCandidates();
+                }
+            });
+        }
+    }
+
+    public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         public ViewPagerAdapter(Fragment fragment) {
             super(fragment.getChildFragmentManager());
@@ -110,7 +119,6 @@ public class ViewPagerCandidateInfoFragment extends Fragment {
 
         @Override
         public Fragment getItem(int i) {
-            // TODO: get previous fragment's y position and pass to next fragment.
             return fragments.get(i);
         }
 
@@ -118,7 +126,6 @@ public class ViewPagerCandidateInfoFragment extends Fragment {
         public int getCount() {
             return fragments.size();
         }
-        // TODO: show neighbors
 /*
         @Override
         public float getPageWidth(int position) {
