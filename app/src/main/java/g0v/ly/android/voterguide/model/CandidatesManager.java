@@ -77,7 +77,7 @@ public class CandidatesManager {
         return null;
     }
 
-    private List<Candidate> downloadCandidatesOfCounty(final String countyString) {
+    private List<Candidate> downloadCandidatesOfCounty(String countyString) {
         List<Candidate> candidates = new ArrayList<>();
         String countryStringInEnglish = "";
         try {
@@ -87,22 +87,31 @@ public class CandidatesManager {
             logger.debug(e.getMessage());
         }
 
-        String rawResultString = WebRequest.create()
-                .sendHttpRequestForResponse(WebRequest.G0V_LY_VOTE_API_URL, "ad=9&county=" + countryStringInEnglish);
-        try {
-            JSONObject rawObject = new JSONObject(rawResultString);
+        boolean hasNextPage = false;
+        int page = 0;
+        do {
+            page++;
+            logger.debug("Load {} candidate list, page: {}", countyString, page);
 
-            JSONArray candidatesArray = rawObject.getJSONArray("results");
+            String rawResultString = WebRequest.create()
+                    .sendHttpRequestForResponse(WebRequest.G0V_LY_VOTE_API_URL, "ad=9&page=" + page + "&county=" + countryStringInEnglish);
+            try {
+                JSONObject rawObject = new JSONObject(rawResultString);
+                JSONArray candidatesArray = rawObject.getJSONArray("results");
 
-            for (int i = 0; i < candidatesArray.length(); i++) {
-                JSONObject candidateObject = candidatesArray.getJSONObject(i);
-                Candidate candidate = new Candidate(candidateObject, servicePool);
-                candidates.add(candidate);
+                for (int i = 0; i < candidatesArray.length(); i++) {
+                    JSONObject candidateObject = candidatesArray.getJSONObject(i);
+                    Candidate candidate = new Candidate(candidateObject, servicePool);
+                    candidates.add(candidate);
+                }
+
+                hasNextPage = rawObject.has("next") && !rawObject.getString("next").equals("null");
+            }
+            catch (JSONException e) {
+                logger.debug(e.getMessage());
             }
         }
-        catch (JSONException e) {
-            logger.debug(e.getMessage());
-        }
+        while(hasNextPage);
 
         return candidates;
     }
