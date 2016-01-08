@@ -83,7 +83,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
         if (selectedDistrictString != null) {
             List<Candidate> tempCandidates = new ArrayList<>();
             for (Candidate candidate : candidatesList) {
-                if (candidate.district.equals(selectedDistrictString)) {
+                if (candidate.sessionName.equals(selectedDistrictString)) {
                     tempCandidates.add(candidate);
                 }
             }
