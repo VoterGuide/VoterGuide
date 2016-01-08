@@ -1,13 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:paddingLeft="10dp">
 
-    <TextView
-        android:id="@+id/candidate_name_textview"
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/candidate_photo_imageview"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerVertical="true" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:gravity="center"
-        android:layout_centerInParent="true"
-        style="@style/TextContent"/>
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/candidate_photo_imageview"
+        android:layout_toRightOf="@id/candidate_photo_imageview"
+        android:paddingLeft="50dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+
+        <TextView
+            android:id="@+id/candidate_name_textview"
+            style="@style/TextTitle"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/candidate_gender_textview"
+            style="@style/TextContent"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@id/candidate_name_textview"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/candidate_age_textview"
+            style="@style/TextContent"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginRight="10dp"
+            android:layout_below="@id/candidate_name_textview"
+            android:layout_toRightOf="@id/candidate_gender_textview"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/candidate_party_textview"
+            style="@style/TextContent"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_below="@id/candidate_name_textview"
+            android:layout_toRightOf="@id/candidate_age_textview"
+            android:gravity="center_vertical" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

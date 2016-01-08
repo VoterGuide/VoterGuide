@@ -12,6 +12,8 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -88,12 +90,16 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             candidatesList = tempCandidates;
         }
 
+        for (Candidate candidate : candidatesList) {
+            candidate.addObserver(this);
+        }
+
         adapter.setList(candidatesList);
         adapter.notifyDataSetChanged();
     }
 
     @Override
-    public void update(Observable observable, Object data) {
+    public void update(final Observable observable, Object data) {
         Activity activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(new Runnable() {
@@ -107,7 +113,11 @@ public class SelectCandidateFragment extends Fragment implements Observer {
 
     private class ListViewAdapter extends BaseAdapter {
         private class ViewHolder {
+            CircleImageView candidatePhoto;
             TextView candidateNameTextView;
+            TextView candidatePartyTextView;
+            TextView candidateGenderTextView;
+            TextView candidateAgeTextView;
         }
 
         List<Candidate> candidates = new ArrayList<>();
@@ -141,6 +151,10 @@ public class SelectCandidateFragment extends Fragment implements Observer {
 
                 viewHolder = new ViewHolder();
                 viewHolder.candidateNameTextView = (TextView) rowView.findViewById(R.id.candidate_name_textview);
+                viewHolder.candidatePartyTextView = (TextView) rowView.findViewById(R.id.candidate_party_textview);
+                viewHolder.candidateGenderTextView = (TextView) rowView.findViewById(R.id.candidate_gender_textview);
+                viewHolder.candidateAgeTextView = (TextView) rowView.findViewById(R.id.candidate_age_textview);
+                viewHolder.candidatePhoto = (CircleImageView) rowView.findViewById(R.id.candidate_photo_imageview);
 
                 rowView.setTag(viewHolder);
             }
@@ -148,7 +162,12 @@ public class SelectCandidateFragment extends Fragment implements Observer {
                 viewHolder = (ViewHolder) rowView.getTag();
             }
 
-            viewHolder.candidateNameTextView.setText(candidates.get(position).name);
+            Candidate candidate = candidates.get(position);
+            viewHolder.candidateNameTextView.setText(candidate.name);
+            viewHolder.candidatePartyTextView.setText(candidate.party);
+            viewHolder.candidateGenderTextView.setText(candidate.gender);
+            viewHolder.candidateAgeTextView.setText(candidate.age);
+            viewHolder.candidatePhoto.setImageBitmap(candidate.photo);
 
             return rowView;
         }

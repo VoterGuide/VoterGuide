@@ -22,11 +22,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Observable;
 import java.util.concurrent.Callable;
 
-public class Candidate {
+public class Candidate extends Observable {
     private static final Logger logger = LoggerFactory.getLogger(Candidate.class);
 
+    // XXX: Revise with [P] Observer
     public interface Callback {
         void onPhotoDownloadComplete(Bitmap photo);
     }
@@ -37,6 +44,7 @@ public class Candidate {
     public int number;
     public String name;
     public String gender;
+    public String age;
     public String sessionName;
     public String cityNumber;
     public String party;
@@ -53,6 +61,7 @@ public class Candidate {
             number = rawObject.getInt("number");
             name = rawObject.getString("name");
             gender = rawObject.getString("gender");
+            age = birthdayToAge(cecDataObject.getString("birthdate"));
             sessionName = cecDataObject.getString("sessionname");
             cityNumber = cecDataObject.getString("cityno");
             party = rawObject.getString("party");
@@ -91,6 +100,9 @@ public class Candidate {
                     if (callback != null) {
                         callback.onPhotoDownloadComplete(photo);
                     }
+
+                    setChanged();
+                    notifyObservers();
                 }
 
                 @Override
@@ -102,6 +114,34 @@ public class Candidate {
         catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Age parser
+     * @param birthdayString - e.g. Apr 29, 1976 12:00:00 AM
+     * @return age - in String
+     */
+    private String birthdayToAge(String birthdayString) {
+        DateFormat apiFormat = new SimpleDateFormat( "MMM dd, yyyy hh:mm:ss aaa", Locale.US);
+        Calendar birthday = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+        String ageString = "";
+
+        try {
+            birthday.setTime(apiFormat.parse(birthdayString));
+            int age = today.get(Calendar.YEAR) - birthday.get(Calendar.YEAR);
+
+            if (today.get(Calendar.DAY_OF_YEAR) < birthday.get(Calendar.DAY_OF_YEAR)){
+                age--;
+            }
+
+            ageString = String.valueOf(age);
+        }
+        catch (ParseException e) {
+            logger.debug(e.getMessage());
+        }
+
+        return ageString;
     }
 
     /**
