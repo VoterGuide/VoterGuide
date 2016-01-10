@@ -1,16 +1,22 @@
 package g0v.ly.android.voterguide.ui.info;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -29,14 +35,15 @@ import g0v.ly.android.voterguide.model.CandidatesManager;
 import g0v.ly.android.voterguide.ui.MainActivity;
 
 public class SelectCandidateFragment extends Fragment implements Observer {
+    private static final Logger logger = LoggerFactory.getLogger(SelectCandidateFragment.class);
 
-    private ListViewAdapter adapter = new ListViewAdapter();
+    private RecyclerViewAdapter adapter = new RecyclerViewAdapter();
 
     private List<Candidate> candidatesList = new ArrayList<>();
     private String selectedCountyString;
     private String selectedDistrictString;
 
-    @Bind(R.id.candidates_listview) ListView candidatesListView;
+    @Bind(R.id.recycler_view) RecyclerView recyclerView;
 
     public static SelectCandidateFragment newFragment() {
         return new SelectCandidateFragment();
@@ -63,9 +70,20 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             selectedDistrictString = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING);
         }
 
+        Context context = getContext();
+        if (context != null) {
+            LinearLayoutManager llm = new LinearLayoutManager(context);
+            recyclerView.setLayoutManager(llm);
+        }
+        else {
+            logger.debug("Failed to get context");
+        }
+
         getCandidates();
-        candidatesListView.setAdapter(adapter);
-        candidatesListView.setOnItemClickListener(itemClickListener);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(onItemClickListener);
         return rootView;
     }
 
@@ -111,72 +129,9 @@ public class SelectCandidateFragment extends Fragment implements Observer {
         }
     }
 
-    private class ListViewAdapter extends BaseAdapter {
-        private class ViewHolder {
-            CircleImageView candidatePhoto;
-            TextView candidateNameTextView;
-            TextView candidatePartyTextView;
-            TextView candidateGenderTextView;
-            TextView candidateAgeTextView;
-        }
-
-        List<Candidate> candidates = new ArrayList<>();
-
-        public void setList(List<Candidate> candidates) {
-            this.candidates = candidates;
-        }
-
+    private RecyclerViewAdapter.OnItemClickListener onItemClickListener = new RecyclerViewAdapter.OnItemClickListener() {
         @Override
-        public int getCount() {
-            return candidates.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return candidates.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {View rowView = convertView;
-
-            ViewHolder viewHolder;
-            if (rowView == null) {
-                LayoutInflater inflater = LayoutInflater.from(getActivity());
-                rowView = inflater.inflate(R.layout.row_candidate, null);
-
-                viewHolder = new ViewHolder();
-                viewHolder.candidateNameTextView = (TextView) rowView.findViewById(R.id.candidate_name_textview);
-                viewHolder.candidatePartyTextView = (TextView) rowView.findViewById(R.id.candidate_party_textview);
-                viewHolder.candidateGenderTextView = (TextView) rowView.findViewById(R.id.candidate_gender_textview);
-                viewHolder.candidateAgeTextView = (TextView) rowView.findViewById(R.id.candidate_age_textview);
-                viewHolder.candidatePhoto = (CircleImageView) rowView.findViewById(R.id.candidate_photo_imageview);
-
-                rowView.setTag(viewHolder);
-            }
-            else {
-                viewHolder = (ViewHolder) rowView.getTag();
-            }
-
-            Candidate candidate = candidates.get(position);
-            viewHolder.candidateNameTextView.setText(candidate.name);
-            viewHolder.candidatePartyTextView.setText(candidate.party);
-            viewHolder.candidateGenderTextView.setText(candidate.gender);
-            viewHolder.candidateAgeTextView.setText(candidate.age);
-            viewHolder.candidatePhoto.setImageBitmap(candidate.photo);
-
-            return rowView;
-        }
-    }
-
-    private ListView.OnItemClickListener itemClickListener = new ListView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        public void onItemClick(View view, int position) {
             Activity activity = SelectCandidateFragment.this.getActivity();
             if (activity instanceof MainActivity) {
                 String candidateName = candidatesList.get(position).name;
@@ -187,4 +142,72 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             }
         }
     };
+
+    private static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+            CardView cardView;
+            CircleImageView candidatePhoto;
+            TextView candidateNameTextView;
+            TextView candidatePartyTextView;
+            TextView candidateGenderTextView;
+            TextView candidateAgeTextView;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+
+                cardView = (CardView) itemView.findViewById(R.id.cardview);
+                candidateNameTextView = (TextView) cardView.findViewById(R.id.candidate_name_textview);
+                candidatePartyTextView = (TextView) cardView.findViewById(R.id.candidate_party_textview);
+                candidateGenderTextView = (TextView) cardView.findViewById(R.id.candidate_gender_textview);
+                candidateAgeTextView = (TextView) cardView.findViewById(R.id.candidate_age_textview);
+                candidatePhoto = (CircleImageView) cardView.findViewById(R.id.candidate_photo_imageview);
+
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(v, getPosition());
+                }
+            }
+        }
+
+        public interface OnItemClickListener {
+            void onItemClick(View view , int position);
+        }
+
+        public void setOnItemClickListener(final OnItemClickListener onItemClickListener) {
+            this.onItemClickListener = onItemClickListener;
+        }
+
+        List<Candidate> candidates = new ArrayList<>();
+        OnItemClickListener onItemClickListener;
+
+        public void setList(List<Candidate> candidates) {
+            this.candidates = candidates;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_candidate_card, parent, false);
+            return new ViewHolder(rootView);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder viewHolder, int position) {
+            Candidate candidate = candidates.get(position);
+            viewHolder.candidateNameTextView.setText(candidate.name);
+            viewHolder.candidatePartyTextView.setText(candidate.party);
+            viewHolder.candidateGenderTextView.setText(candidate.gender);
+            viewHolder.candidateAgeTextView.setText(candidate.age);
+            viewHolder.candidatePhoto.setImageBitmap(candidate.photo);
+        }
+
+        @Override
+        public int getItemCount() {
+            return candidates.size();
+        }
+    }
 }
