@@ -178,10 +178,6 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             void onItemClick(View view , int position);
         }
 
-        public void setOnItemClickListener(final OnItemClickListener onItemClickListener) {
-            this.onItemClickListener = onItemClickListener;
-        }
-
         List<Candidate> candidates = new ArrayList<>();
         OnItemClickListener onItemClickListener;
 
@@ -208,6 +204,10 @@ public class SelectCandidateFragment extends Fragment implements Observer {
         @Override
         public int getItemCount() {
             return candidates.size();
+        }
+
+        public void setOnItemClickListener(final OnItemClickListener onItemClickListener) {
+            this.onItemClickListener = onItemClickListener;
         }
     }
 }
