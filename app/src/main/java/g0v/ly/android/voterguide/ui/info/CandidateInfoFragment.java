@@ -10,6 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
@@ -17,6 +20,7 @@ import g0v.ly.android.voterguide.model.Candidate;
 import g0v.ly.android.voterguide.model.CandidatesManager;
 
 public class CandidateInfoFragment extends Fragment {
+    private static final Logger logger = LoggerFactory.getLogger(CandidateInfoFragment.class);
     private String candidateName;
 
     @Bind(R.id.candidate_photo_imageview) ImageView candidatePhotoImageView;
@@ -46,9 +50,12 @@ public class CandidateInfoFragment extends Fragment {
         candidateGenderTextView.setText(candidate.gender);
         candidatePartyTextView.setText(candidate.party);
 
-        Bitmap photo = candidate.photo;
+        Bitmap photo = candidate.getPhoto();
         if (photo != null) {
             candidatePhotoImageView.setImageBitmap(photo);
+        }
+        else {
+            logger.debug("Fail to get candidate's photo");
         }
 
         return rootView;
