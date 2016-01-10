@@ -67,6 +67,7 @@ public class SelectDistrictFragment extends Fragment {
     private class ListViewAdapter extends BaseAdapter {
         private class ViewHolder {
             TextView titleTextView;
+            TextView subTitleTextView;
         }
 
         List<ElectionDistrict> electionDistricts = new ArrayList<>();
@@ -96,10 +97,12 @@ public class SelectDistrictFragment extends Fragment {
             ViewHolder viewHolder;
             if (rowView == null) {
                 LayoutInflater inflater = LayoutInflater.from(getActivity());
-                rowView = inflater.inflate(R.layout.row_counties_list, null);
+                rowView = inflater.inflate(R.layout.row_region, null);
 
                 viewHolder = new ViewHolder();
-                viewHolder.titleTextView = (TextView) rowView.findViewById(R.id.county_title_textview);
+                viewHolder.titleTextView = (TextView) rowView.findViewById(R.id.title_textview);
+                viewHolder.subTitleTextView = (TextView) rowView.findViewById(R.id.subtitle_textview);
+                viewHolder.subTitleTextView.setVisibility(View.VISIBLE);
 
                 rowView.setTag(viewHolder);
             }
@@ -108,6 +111,7 @@ public class SelectDistrictFragment extends Fragment {
             }
 
             viewHolder.titleTextView.setText(electionDistricts.get(position).sessionName);
+            viewHolder.subTitleTextView.setText(electionDistricts.get(position).district);
 
             return rowView;
         }

@@ -80,10 +80,10 @@ public class SelectCountyFragment extends Fragment {
             ViewHolder viewHolder;
             if (rowView == null) {
                 LayoutInflater inflater = LayoutInflater.from(getActivity());
-                rowView = inflater.inflate(R.layout.row_counties_list, null);
+                rowView = inflater.inflate(R.layout.row_region, null);
 
                 viewHolder = new ViewHolder();
-                viewHolder.titleTextView = (TextView) rowView.findViewById(R.id.county_title_textview);
+                viewHolder.titleTextView = (TextView) rowView.findViewById(R.id.title_textview);
 
                 rowView.setTag(viewHolder);
             }
