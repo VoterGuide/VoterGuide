@@ -3,7 +3,7 @@ package g0v.ly.android.voterguide.ui.info;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,13 +63,23 @@ public class CandidateInfoFragment extends Fragment implements Observer {
         candidateExperiencesTextView.setText(candidate.experiences);
         candidateManifestoTextView.setText(candidate.manifesto);
 
-        Bitmap photo = candidate.getPhoto();
-        if (photo != null) {
-            candidatePhotoImageView.setImageBitmap(photo);
-        }
-        else {
-            logger.debug("Fail to get candidate's photo");
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Bitmap photo = candidate.getPhoto();
+                if (photo != null) {
+                    candidatePhotoImageView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            candidatePhotoImageView.setImageBitmap(photo);
+                        }
+                    });
+                }
+                else {
+                    logger.debug("Fail to get candidate's photo");
+                }
+            }
+        }).start();
 
         return rootView;
     }

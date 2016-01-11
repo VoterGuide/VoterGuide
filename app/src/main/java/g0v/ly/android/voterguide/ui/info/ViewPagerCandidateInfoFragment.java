@@ -119,7 +119,7 @@ public class ViewPagerCandidateInfoFragment extends Fragment implements Observer
 
         @Override
         public Fragment getItem(int i) {
-            return fragments.get(i);
+            return null;//fragments.get(i);
         }
 
         @Override

@@ -1,10 +1,10 @@
 package g0v.ly.android.voterguide.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,7 +19,7 @@ import g0v.ly.android.voterguide.ui.info.SelectCountyFragment;
 import g0v.ly.android.voterguide.ui.info.SelectDistrictFragment;
 import g0v.ly.android.voterguide.utilities.InternalStorageHolder;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
     public static String BUNDLE_KEY_SELECTED_COUNTY_STRING = "bundle.key.selected.county";
     public static String BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING = "bundle.key.selected.candidate.district";
     public static String BUNDLE_KEY_SELECTED_CANDIDATE_NAME_STRING = "bundle.key.selected.candidate.name";
@@ -80,7 +80,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void launch(State newState) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(newState.id);
 
         if (state != null && state == newState && fragment != null) {
@@ -146,6 +146,11 @@ public class MainActivity extends FragmentActivity {
         }
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(
+                R.animator.card_flip_right_in,
+                R.animator.card_flip_right_out,
+                R.animator.card_flip_left_in,
+                R.animator.card_flip_left_out);
         fragmentTransaction.replace(R.id.fragmentHolder, fragment, newState.id);
         if (stacked) {
             fragmentTransaction.addToBackStack(null);
