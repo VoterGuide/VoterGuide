@@ -1,7 +1,6 @@
 package g0v.ly.android.voterguide.ui.info;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
@@ -68,9 +67,9 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             selectedDistrictString = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING);
         }
 
-        Context context = getContext();
-        if (context != null) {
-            LinearLayoutManager llm = new LinearLayoutManager(context);
+        Activity activity = getActivity();
+        if (activity != null) {
+            LinearLayoutManager llm = new LinearLayoutManager(activity);
             recyclerView.setLayoutManager(llm);
         }
         else {
@@ -167,7 +166,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(v, getPosition());
+                    onItemClickListener.onItemClick(v, getAdapterPosition());
                 }
             }
         }

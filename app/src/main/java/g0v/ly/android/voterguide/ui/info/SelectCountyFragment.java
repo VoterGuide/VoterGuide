@@ -1,7 +1,6 @@
 package g0v.ly.android.voterguide.ui.info;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
@@ -47,9 +46,9 @@ public class SelectCountyFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        Context context = getContext();
-        if (context != null) {
-            LinearLayoutManager llm = new LinearLayoutManager(context);
+        Activity activity = getActivity();
+        if (activity != null) {
+            LinearLayoutManager llm = new LinearLayoutManager(activity);
             recyclerView.setLayoutManager(llm);
         }
         else {
@@ -113,7 +112,7 @@ public class SelectCountyFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(v, getPosition());
+                    onItemClickListener.onItemClick(v, getAdapterPosition());
                 }
             }
         }
