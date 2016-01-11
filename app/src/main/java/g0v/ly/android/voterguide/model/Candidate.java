@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -34,13 +33,6 @@ import g0v.ly.android.voterguide.utilities.InternalStorageHolder;
 
 public class Candidate extends Observable {
     private static final Logger logger = LoggerFactory.getLogger(Candidate.class);
-
-    // XXX: Revise with [P] Observer
-    public interface Callback {
-        void onPhotoDownloadComplete(Bitmap photo);
-    }
-
-    private WeakReference<Callback> callbackRef;
 
     public String county;
     public String district;
@@ -111,11 +103,6 @@ public class Candidate extends Observable {
             Futures.addCallback(downloadPhotoFuture, new FutureCallback<Bitmap>() {
                 @Override
                 public void onSuccess(Bitmap result) {
-                    Callback callback = getCallback();
-                    if (callback != null) {
-                        callback.onPhotoDownloadComplete(result);
-                    }
-
                     internalStorageHolder.saveToInternalSorage(Candidate.this, result);
 
                     setChanged();
@@ -195,16 +182,5 @@ public class Candidate extends Observable {
             logger.debug(e.getMessage());
         }
         return stream;
-    }
-
-    public void setCallback(Callback cb) {
-        callbackRef = new WeakReference<>(cb);
-    }
-
-    public Callback getCallback() {
-        if (callbackRef != null) {
-            return callbackRef.get();
-        }
-        return null;
     }
 }

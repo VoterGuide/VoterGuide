@@ -13,14 +13,19 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
 import g0v.ly.android.voterguide.model.Candidate;
 import g0v.ly.android.voterguide.model.CandidatesManager;
 
-public class CandidateInfoFragment extends Fragment {
+public class CandidateInfoFragment extends Fragment implements Observer {
     private static final Logger logger = LoggerFactory.getLogger(CandidateInfoFragment.class);
+
+    private Candidate candidate;
     private String candidateName;
 
     @Bind(R.id.candidate_photo_imageview) ImageView candidatePhotoImageView;
@@ -43,8 +48,8 @@ public class CandidateInfoFragment extends Fragment {
         ButterKnife.bind(this, rootView);
 
         CandidatesManager candidatesManager = CandidatesManager.getInstance();
-        Candidate candidate = candidatesManager.getCandidateWithName(candidateName);
-        candidate.setCallback(candidatePhotoDownloadCallback);
+        candidate = candidatesManager.getCandidateWithName(candidateName);
+        candidate.addObserver(this);
 
         candidateNameTextView.setText(candidate.name);
         candidateGenderTextView.setText(candidate.gender);
@@ -61,18 +66,24 @@ public class CandidateInfoFragment extends Fragment {
         return rootView;
     }
 
-    private Candidate.Callback candidatePhotoDownloadCallback = new Candidate.Callback() {
-        @Override
-        public void onPhotoDownloadComplete(final Bitmap photo) {
-            Activity activity = getActivity();
-            if (activity != null) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        candidatePhotoImageView.setImageBitmap(photo);
-                    }
-                });
-            }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        candidate.deleteObserver(this);
+    }
+
+    @Override
+    public void update(final Observable observable, Object data) {
+        Activity activity = getActivity();
+        if (activity != null) {
+            final Candidate candidate = (Candidate) observable;
+
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    candidatePhotoImageView.setImageBitmap(candidate.getPhoto());
+                }
+            });
         }
-    };
+    }
 }
