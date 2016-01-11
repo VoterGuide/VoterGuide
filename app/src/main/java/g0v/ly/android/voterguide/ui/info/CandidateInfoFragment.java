@@ -30,8 +30,12 @@ public class CandidateInfoFragment extends Fragment implements Observer {
 
     @Bind(R.id.candidate_photo_imageview) ImageView candidatePhotoImageView;
     @Bind(R.id.candidate_name_textview) TextView candidateNameTextView;
+    @Bind(R.id.candidate_age_textview) TextView candidateAgeTextView;
     @Bind(R.id.candidate_gender_textview) TextView candidateGenderTextView;
     @Bind(R.id.candidate_party_textview) TextView candidatePartyTextView;
+    @Bind(R.id.candidate_education_textview) TextView candidateEducationTextView;
+    @Bind(R.id.candidate_experiences_textview) TextView candidateExperiencesTextView;
+    @Bind(R.id.candidate_manifesto_textview) TextView candidateManifestoTextView;
 
     public static CandidateInfoFragment newFragment(String name) {
         return new CandidateInfoFragment(name);
@@ -52,8 +56,12 @@ public class CandidateInfoFragment extends Fragment implements Observer {
         candidate.addObserver(this);
 
         candidateNameTextView.setText(candidate.name);
+        candidateAgeTextView.setText(candidate.age);
         candidateGenderTextView.setText(candidate.gender);
         candidatePartyTextView.setText(candidate.party);
+        candidateEducationTextView.setText(candidate.education);
+        candidateExperiencesTextView.setText(candidate.experiences);
+        candidateManifestoTextView.setText(candidate.manifesto);
 
         Bitmap photo = candidate.getPhoto();
         if (photo != null) {

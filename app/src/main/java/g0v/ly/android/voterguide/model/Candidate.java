@@ -44,6 +44,11 @@ public class Candidate extends Observable {
     public String cityNumber;
     public String party;
 
+    public String drawNumber;
+    public String education;
+    public String experiences;
+    public String manifesto;
+
     private String photoUrl;
 
     public Candidate(JSONObject rawObject, ListeningExecutorService servicePool) {
@@ -59,8 +64,16 @@ public class Candidate extends Observable {
             sessionName = cecDataObject.getString("sessionname");
             cityNumber = cecDataObject.getString("cityno");
             party = rawObject.getString("party");
-            photoUrl = composePhotoUrl();
+            drawNumber = cecDataObject.getString("drawno");
+            education = cecDataObject.getString("rptedu");
+            experiences = cecDataObject.getString("rptexp");
+            manifesto = cecDataObject.getString("rptpolitics");
 
+            education = reviseNewlineSyntax(education);
+            experiences = reviseNewlineSyntax(experiences);
+            manifesto = reviseNewlineSyntax(manifesto);
+
+            photoUrl = composePhotoUrl();
             loadPhoto(servicePool);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -143,6 +156,11 @@ public class Candidate extends Observable {
         }
 
         return ageString;
+    }
+
+    private String reviseNewlineSyntax(String before) {
+        String after = before.replace("&nbsp;", "\n");
+        return after.replace("<BR>", "");
     }
 
     /**
