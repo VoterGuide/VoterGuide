@@ -1,13 +1,13 @@
 package g0v.ly.android.voterguide.model;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +30,8 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.concurrent.Callable;
 
+import g0v.ly.android.voterguide.utilities.InternalStorageHolder;
+
 public class Candidate extends Observable {
     private static final Logger logger = LoggerFactory.getLogger(Candidate.class);
 
@@ -37,6 +39,7 @@ public class Candidate extends Observable {
     public interface Callback {
         void onPhotoDownloadComplete(Bitmap photo);
     }
+
     private WeakReference<Callback> callbackRef;
 
     public String county;
@@ -48,7 +51,6 @@ public class Candidate extends Observable {
     public String sessionName;
     public String cityNumber;
     public String party;
-    public Bitmap photo;
 
     private String photoUrl;
 
@@ -67,6 +69,22 @@ public class Candidate extends Observable {
             party = rawObject.getString("party");
             photoUrl = composePhotoUrl();
 
+            loadPhoto(servicePool);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Bitmap getPhoto() {
+        InternalStorageHolder internalStorageHolder = InternalStorageHolder.getInstance();
+        return internalStorageHolder.loadImageFromStorage(this);
+    }
+
+    private void loadPhoto(ListeningExecutorService servicePool) {
+        final InternalStorageHolder internalStorageHolder = InternalStorageHolder.getInstance();
+        if (internalStorageHolder.loadImageFromStorage(this) == null) {
+            logger.debug("Start download {}'s photo", name);
+
             ListenableFuture<Bitmap> downloadPhotoFuture = servicePool.submit(new Callable<Bitmap>() {
                 @Override
                 public Bitmap call() throws Exception {
@@ -80,8 +98,7 @@ public class Candidate extends Observable {
                         if (stream != null) {
                             bitmap = BitmapFactory.decodeStream(stream, null, bmOptions);
                             stream.close();
-                        }
-                        else {
+                        } else {
                             logger.debug("Download candidate's photo failed.");
                         }
                     } catch (IOException e) {
@@ -94,12 +111,12 @@ public class Candidate extends Observable {
             Futures.addCallback(downloadPhotoFuture, new FutureCallback<Bitmap>() {
                 @Override
                 public void onSuccess(Bitmap result) {
-                    photo = result;
-
                     Callback callback = getCallback();
                     if (callback != null) {
-                        callback.onPhotoDownloadComplete(photo);
+                        callback.onPhotoDownloadComplete(result);
                     }
+
+                    internalStorageHolder.saveToInternalSorage(Candidate.this, result);
 
                     setChanged();
                     notifyObservers();
@@ -111,18 +128,16 @@ public class Candidate extends Observable {
                 }
             });
         }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
      * Age parser
+     *
      * @param birthdayString - e.g. Apr 29, 1976 12:00:00 AM
      * @return age - in String
      */
     private String birthdayToAge(String birthdayString) {
-        DateFormat apiFormat = new SimpleDateFormat( "MMM dd, yyyy hh:mm:ss aaa", Locale.US);
+        DateFormat apiFormat = new SimpleDateFormat("MMM dd, yyyy hh:mm:ss aaa", Locale.US);
         Calendar birthday = Calendar.getInstance();
         Calendar today = Calendar.getInstance();
         String ageString = "";
@@ -131,13 +146,12 @@ public class Candidate extends Observable {
             birthday.setTime(apiFormat.parse(birthdayString));
             int age = today.get(Calendar.YEAR) - birthday.get(Calendar.YEAR);
 
-            if (today.get(Calendar.DAY_OF_YEAR) < birthday.get(Calendar.DAY_OF_YEAR)){
+            if (today.get(Calendar.DAY_OF_YEAR) < birthday.get(Calendar.DAY_OF_YEAR)) {
                 age--;
             }
 
             ageString = String.valueOf(age);
-        }
-        catch (ParseException e) {
+        } catch (ParseException e) {
             logger.debug(e.getMessage());
         }
 
@@ -153,11 +167,10 @@ public class Candidate extends Observable {
     private String composePhotoUrl() {
         String url = "http://g0v-data.github.io/cec-crawler/images/";
         try {
-            String paramString = cityNumber + "-" + county + "-" + sessionName +"-" + number + "-" + name + ".jpg";
+            String paramString = cityNumber + "-" + county + "-" + sessionName + "-" + number + "-" + name + ".jpg";
             paramString = URLEncoder.encode(paramString, "UTF-8");
             url += paramString;
-        }
-        catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             logger.debug(e.getMessage());
         }
 

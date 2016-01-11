@@ -18,6 +18,7 @@ import g0v.ly.android.voterguide.ui.info.SelectCandidateFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCountyFragment;
 import g0v.ly.android.voterguide.ui.info.SelectDistrictFragment;
 import g0v.ly.android.voterguide.utilities.FontManager;
+import g0v.ly.android.voterguide.utilities.InternalStorageHolder;
 
 public class MainActivity extends FragmentActivity {
     public static String BUNDLE_KEY_SELECTED_COUNTY_STRING = "bundle.key.selected.county";
@@ -49,6 +50,8 @@ public class MainActivity extends FragmentActivity {
         FontManager.getInstance().setContext(this);
 
         state = State.STATE_MAIN;
+
+        InternalStorageHolder.getInstance().setContext(this);
     }
 
     @Override

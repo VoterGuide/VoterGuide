@@ -1,16 +1,19 @@
 package g0v.ly.android.voterguide.ui.info;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +28,9 @@ import g0v.ly.android.voterguide.ui.MainActivity;
 import g0v.ly.android.voterguide.utilities.HardCodeInfos;
 
 public class SelectCountyFragment extends Fragment {
-    @Bind(R.id.counties_listview) ListView countiesListView;
+    private static final Logger logger = LoggerFactory.getLogger(SelectCountyFragment.class);
+
+    @Bind(R.id.recycler_view) RecyclerView recyclerView;
 
     private static List<String> counties = new ArrayList<>();
 
@@ -42,64 +47,31 @@ public class SelectCountyFragment extends Fragment {
 
         ButterKnife.bind(this, rootView);
 
-        countiesListView.setAdapter(new ListViewAdapter(counties));
-        countiesListView.setOnItemClickListener(itemClickListener);
+        Context context = getContext();
+        if (context != null) {
+            LinearLayoutManager llm = new LinearLayoutManager(context);
+            recyclerView.setLayoutManager(llm);
+        }
+        else {
+            logger.debug("Failed to get context");
+        }
+
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(counties);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(onItemClickListener);
 
         return rootView;
     }
 
-    private class ListViewAdapter extends BaseAdapter {
-        private class ViewHolder {
-            TextView titleTextView;
-        }
-
-        List<String> counties = new ArrayList<>();
-
-        public ListViewAdapter(List<String> counties) {
-            this.counties = counties;
-        }
-
-        @Override
-        public int getCount() {
-            return counties.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return counties.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {View rowView = convertView;
-
-            ViewHolder viewHolder;
-            if (rowView == null) {
-                LayoutInflater inflater = LayoutInflater.from(getActivity());
-                rowView = inflater.inflate(R.layout.row_counties_list, null);
-
-                viewHolder = new ViewHolder();
-                viewHolder.titleTextView = (TextView) rowView.findViewById(R.id.county_title_textview);
-
-                rowView.setTag(viewHolder);
-            }
-            else {
-                viewHolder = (ViewHolder) rowView.getTag();
-            }
-
-            viewHolder.titleTextView.setText(counties.get(position));
-
-            return rowView;
-        }
+    private boolean isCountyHasMultipleDistrict(String selectedCountyString) {
+        ElectionDistrictManager electionDistrictManager = ElectionDistrictManager.getInstance();
+        return electionDistrictManager.isCountyHasMultipleDistrict(selectedCountyString);
     }
 
-    private ListView.OnItemClickListener itemClickListener = new ListView.OnItemClickListener() {
+    private RecyclerViewAdapter.OnItemClickListener onItemClickListener = new RecyclerViewAdapter.OnItemClickListener() {
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        public void onItemClick(View view, int position) {
             Activity activity = SelectCountyFragment.this.getActivity();
             if (activity instanceof MainActivity) {
                 String selectedCountyString = counties.get(position);
@@ -124,8 +96,57 @@ public class SelectCountyFragment extends Fragment {
         }
     };
 
-    private boolean isCountyHasMultipleDistrict(String selectedCountyString) {
-        ElectionDistrictManager electionDistrictManager = ElectionDistrictManager.getInstance();
-        return electionDistrictManager.isCountyHasMultipleDistrict(selectedCountyString);
+
+    private static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+            TextView titleTextView;
+
+            public ViewHolder(View itemView) {
+                super(itemView);
+
+                titleTextView = (TextView) itemView.findViewById(R.id.title_textview);
+
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(v, getPosition());
+                }
+            }
+        }
+
+        public interface OnItemClickListener {
+            void onItemClick(View view , int position);
+        }
+
+        List<String> counties = new ArrayList<>();
+        OnItemClickListener onItemClickListener;
+
+        public RecyclerViewAdapter(List<String> counties) {
+            this.counties = counties;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_region_card, parent, false);
+            return new ViewHolder(rootView);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder viewHolder, int position) {
+            viewHolder.titleTextView.setText(counties.get(position));
+        }
+
+        @Override
+        public int getItemCount() {
+            return counties.size();
+        }
+
+        public void setOnItemClickListener(final OnItemClickListener onItemClickListener) {
+            this.onItemClickListener = onItemClickListener;
+        }
     }
 }

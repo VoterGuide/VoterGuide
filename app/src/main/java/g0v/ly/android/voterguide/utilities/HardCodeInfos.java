@@ -72,19 +72,21 @@ public class HardCodeInfos {
                 .add("金門縣")
                 .add("連江縣")
                 .build();
+        /*
         List<String> countiesListOfOthers = ImmutableList.<String>builder()
                 .add("山地原住民")
                 .add("平地原住民")
                 .add("全國不分區")
                 .add("僑居國外國民")
                 .build();
+        */
 
         countiesOfTaiwan.put(TaiwanRegions.NorthernTaiwan, countiesListOfNorthernTaiwan);
         countiesOfTaiwan.put(TaiwanRegions.CentralTaiwan, countiesListOfCentralTaiwan);
         countiesOfTaiwan.put(TaiwanRegions.SouthernTaiwan, countiesListOfSouthernTaiwan);
         countiesOfTaiwan.put(TaiwanRegions.EasternTaiwan, countiesListOfEasternTaiwan);
         countiesOfTaiwan.put(TaiwanRegions.Islands, countiesListOfTaiwanIslands);
-        countiesOfTaiwan.put(TaiwanRegions.Others, countiesListOfOthers);
+        //countiesOfTaiwan.put(TaiwanRegions.Others, countiesListOfOthers);
     }
 
     private void prepareDistrictsInfo() {
@@ -150,7 +152,7 @@ public class HardCodeInfos {
 
         //嘉義縣
         electionDistricts.add(new ElectionDistrict("嘉義縣", "第1選舉區", "鹿草鄉，朴子市，太保市，東石鄉，布袋鎮，義竹鄉，水上鄉，六腳鄉"));
-        electionDistricts.add(new ElectionDistrict("嘉義縣", "第1選舉區", "阿里山鄉，竹崎鄉，大埔鄉，大林鎮，民雄鄉，梅山鄉，中埔鄉，新港鄉，番路鄉，溪口鄉"));
+        electionDistricts.add(new ElectionDistrict("嘉義縣", "第2選舉區", "阿里山鄉，竹崎鄉，大埔鄉，大林鎮，民雄鄉，梅山鄉，中埔鄉，新港鄉，番路鄉，溪口鄉"));
 
         //臺南市
         electionDistricts.add(new ElectionDistrict("臺南市", "第1選舉區", "官田區，東山區，後壁區，鹽水區，將軍區，北門區，學甲區，新營區，白河區，柳營區，下營區，六甲區"));
@@ -184,7 +186,7 @@ public class HardCodeInfos {
         counties.addAll(countiesOfTaiwan.get(TaiwanRegions.SouthernTaiwan));
         counties.addAll(countiesOfTaiwan.get(TaiwanRegions.EasternTaiwan));
         counties.addAll(countiesOfTaiwan.get(TaiwanRegions.Islands));
-        counties.addAll(countiesOfTaiwan.get(TaiwanRegions.Others));
+        //counties.addAll(countiesOfTaiwan.get(TaiwanRegions.Others));
 
         return counties;
     }

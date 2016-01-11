@@ -1,15 +1,15 @@
 package g0v.ly.android.voterguide.ui.info;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.slf4j.Logger;
@@ -29,7 +29,8 @@ import g0v.ly.android.voterguide.ui.MainActivity;
 
 public class SelectDistrictFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(SelectDistrictFragment.class);
-    @Bind(R.id.districts_listview) ListView districtsListView;
+
+    @Bind(R.id.recycler_view) RecyclerView recyclerView;
 
     private List<ElectionDistrict> districts = new ArrayList<>();
     private String selectedCountyString;
@@ -48,9 +49,20 @@ public class SelectDistrictFragment extends Fragment {
         selectedCountyString = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING);
         getDistricts(selectedCountyString);
 
+        Context context = getContext();
+        if (context != null) {
+            LinearLayoutManager llm = new LinearLayoutManager(context);
+            recyclerView.setLayoutManager(llm);
+        }
+        else {
+            logger.debug("Failed to get context");
+        }
+
         if (districts.size() > 1) {
-            districtsListView.setAdapter(new ListViewAdapter(districts));
-            districtsListView.setOnItemClickListener(itemClickListener);
+            RecyclerViewAdapter adapter = new RecyclerViewAdapter(districts);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setAdapter(adapter);
+            adapter.setOnItemClickListener(onItemClickListener);
         }
         else {
             logger.debug("Failed to get districts.");
@@ -64,58 +76,9 @@ public class SelectDistrictFragment extends Fragment {
         districts = electionDistrictManager.getElectionDistrictsWithCounty(countyString);
     }
 
-    private class ListViewAdapter extends BaseAdapter {
-        private class ViewHolder {
-            TextView titleTextView;
-        }
-
-        List<ElectionDistrict> electionDistricts = new ArrayList<>();
-
-        public ListViewAdapter(List<ElectionDistrict> electionDistricts) {
-            this.electionDistricts = electionDistricts;
-        }
-
+    private RecyclerViewAdapter.OnItemClickListener onItemClickListener = new RecyclerViewAdapter.OnItemClickListener() {
         @Override
-        public int getCount() {
-            return electionDistricts.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return electionDistricts.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {View rowView = convertView;
-
-            ViewHolder viewHolder;
-            if (rowView == null) {
-                LayoutInflater inflater = LayoutInflater.from(getActivity());
-                rowView = inflater.inflate(R.layout.row_counties_list, null);
-
-                viewHolder = new ViewHolder();
-                viewHolder.titleTextView = (TextView) rowView.findViewById(R.id.county_title_textview);
-
-                rowView.setTag(viewHolder);
-            }
-            else {
-                viewHolder = (ViewHolder) rowView.getTag();
-            }
-
-            viewHolder.titleTextView.setText(electionDistricts.get(position).sessionName);
-
-            return rowView;
-        }
-    }
-
-    private ListView.OnItemClickListener itemClickListener = new ListView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        public void onItemClick(View view, int position) {
             Activity activity = SelectDistrictFragment.this.getActivity();
             if (activity instanceof MainActivity) {
                 String districtString = districts.get(position).sessionName;
@@ -127,4 +90,60 @@ public class SelectDistrictFragment extends Fragment {
             }
         }
     };
+
+    private static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+            TextView titleTextView;
+            TextView subTitleTextView;
+            public ViewHolder(View itemView) {
+                super(itemView);
+
+                titleTextView = (TextView) itemView.findViewById(R.id.title_textview);
+                subTitleTextView = (TextView) itemView.findViewById(R.id.subtitle_textview);
+                subTitleTextView.setVisibility(View.VISIBLE);
+
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(v, getPosition());
+                }
+            }
+        }
+
+        public interface OnItemClickListener {
+            void onItemClick(View view , int position);
+        }
+
+        List<ElectionDistrict> electionDistricts = new ArrayList<>();
+        OnItemClickListener onItemClickListener;
+
+        public RecyclerViewAdapter(List<ElectionDistrict> electionDistricts) {
+            this.electionDistricts = electionDistricts;
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_region_card, parent, false);
+            return new ViewHolder(rootView);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder viewHolder, int position) {
+            viewHolder.titleTextView.setText(electionDistricts.get(position).sessionName);
+            viewHolder.subTitleTextView.setText(electionDistricts.get(position).district);
+        }
+
+        @Override
+        public int getItemCount() {
+            return electionDistricts.size();
+        }
+
+        public void setOnItemClickListener(final OnItemClickListener onItemClickListener) {
+            this.onItemClickListener = onItemClickListener;
+        }
+    }
 }
