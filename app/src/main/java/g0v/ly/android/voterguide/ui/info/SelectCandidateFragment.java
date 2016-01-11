@@ -86,8 +86,8 @@ public class SelectCandidateFragment extends Fragment implements Observer {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
         CandidatesManager.getInstance().deleteObserver(this);
     }
 

@@ -1,39 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent" android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <ImageView
-        android:id="@+id/candidate_photo_imageview"
-        android:layout_width="100dp"
-        android:layout_height="140dp"
-        android:layout_margin="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@null"/>
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@android:color/white"
+        card_view:cardElevation="2dp"
+        card_view:cardUseCompatPadding="true">
 
-    <TextView
-        android:id="@+id/candidate_name_textview"
-        android:layout_width = "match_parent"
-        android:layout_height = "wrap_content"
-        android:layout_marginTop="160dp"
-        android:gravity="start"
-        style="@style/TextContent"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
 
-    <TextView
-        android:id="@+id/candidate_gender_textview"
-        android:layout_width = "match_parent"
-        android:layout_height = "wrap_content"
-        android:layout_marginTop="160dp"
-        android:gravity="end"
-        style="@style/TextContent"/>
+            <RelativeLayout
+                android:id="@+id/candidate_basic_info_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:paddingBottom="30dp"
+                android:paddingLeft="50dp"
+                android:paddingTop="5dp">
 
-    <TextView
-        android:id="@+id/candidate_party_textview"
-        android:layout_width = "match_parent"
-        android:layout_height = "wrap_content"
-        android:layout_margin="10dp"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/candidate_gender_textview"
-        style="@style/TextContent"/>
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/candidate_photo_imageview"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginRight="10dp" />
 
-</RelativeLayout>
+                <TextView
+                    android:id="@+id/candidate_name_textview"
+                    style="@style/TextTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_toEndOf="@id/candidate_photo_imageview"
+                    android:layout_toRightOf="@id/candidate_photo_imageview"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/candidate_gender_textview"
+                    style="@style/TextContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_below="@id/candidate_name_textview"
+                    android:layout_marginRight="10dp"
+                    android:layout_toEndOf="@id/candidate_photo_imageview"
+                    android:layout_toRightOf="@id/candidate_photo_imageview"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/candidate_age_textview"
+                    style="@style/TextContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_below="@id/candidate_name_textview"
+                    android:layout_marginRight="10dp"
+                    android:layout_toRightOf="@id/candidate_gender_textview"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:id="@+id/candidate_party_textview"
+                    style="@style/TextContent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="25dp"
+                    android:layout_below="@id/candidate_name_textview"
+                    android:layout_toRightOf="@id/candidate_age_textview"
+                    android:gravity="center_vertical" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/candidate_education_title"
+                style="@style/TextTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/candidate_basic_info_layout"
+                android:text="@string/candidate_education_title" />
+
+            <TextView
+                android:id="@+id/candidate_education_textview"
+                style="@style/TextContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/candidate_education_title"
+                android:padding="5dp"
+                android:paddingTop="10dp"
+                android:singleLine="false" />
+
+            <TextView
+                android:id="@+id/candidate_experiences_title"
+                style="@style/TextTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/candidate_education_textview"
+                android:text="@string/candidate_experiences_title" />
+
+            <TextView
+                android:id="@+id/candidate_experiences_textview"
+                style="@style/TextContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/candidate_experiences_title"
+                android:padding="5dp"
+                android:singleLine="false" />
+
+            <TextView
+                android:id="@+id/candidate_manifesto_title"
+                style="@style/TextTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/candidate_experiences_textview"
+                android:text="@string/candidate_manifesto_title" />
+
+            <TextView
+                android:id="@+id/candidate_manifesto_textview"
+                style="@style/TextContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/candidate_manifesto_title"
+                android:padding="5dp"
+                android:singleLine="false" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</ScrollView>

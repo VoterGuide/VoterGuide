@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -35,13 +34,6 @@ import g0v.ly.android.voterguide.utilities.InternalStorageHolder;
 public class Candidate extends Observable {
     private static final Logger logger = LoggerFactory.getLogger(Candidate.class);
 
-    // XXX: Revise with [P] Observer
-    public interface Callback {
-        void onPhotoDownloadComplete(Bitmap photo);
-    }
-
-    private WeakReference<Callback> callbackRef;
-
     public String county;
     public String district;
     public int number;
@@ -51,6 +43,11 @@ public class Candidate extends Observable {
     public String sessionName;
     public String cityNumber;
     public String party;
+
+    public String drawNumber;
+    public String education;
+    public String experiences;
+    public String manifesto;
 
     private String photoUrl;
 
@@ -67,8 +64,16 @@ public class Candidate extends Observable {
             sessionName = cecDataObject.getString("sessionname");
             cityNumber = cecDataObject.getString("cityno");
             party = rawObject.getString("party");
-            photoUrl = composePhotoUrl();
+            drawNumber = cecDataObject.getString("drawno");
+            education = cecDataObject.getString("rptedu");
+            experiences = cecDataObject.getString("rptexp");
+            manifesto = cecDataObject.getString("rptpolitics");
 
+            education = reviseNewlineSyntax(education);
+            experiences = reviseNewlineSyntax(experiences);
+            manifesto = reviseNewlineSyntax(manifesto);
+
+            photoUrl = composePhotoUrl();
             loadPhoto(servicePool);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -111,11 +116,6 @@ public class Candidate extends Observable {
             Futures.addCallback(downloadPhotoFuture, new FutureCallback<Bitmap>() {
                 @Override
                 public void onSuccess(Bitmap result) {
-                    Callback callback = getCallback();
-                    if (callback != null) {
-                        callback.onPhotoDownloadComplete(result);
-                    }
-
                     internalStorageHolder.saveToInternalSorage(Candidate.this, result);
 
                     setChanged();
@@ -158,6 +158,11 @@ public class Candidate extends Observable {
         return ageString;
     }
 
+    private String reviseNewlineSyntax(String before) {
+        String after = before.replace("&nbsp;", "\n");
+        return after.replace("<BR>", "");
+    }
+
     /**
      * http://g0v-data.github.io/cec-crawler/images/[cityno]-[county]-[sessionname]-[number]-[name].jpg
      * e.g. http://g0v-data.github.io/cec-crawler/images/018-新竹市-選舉區-3-林家宇.jpg
@@ -195,16 +200,5 @@ public class Candidate extends Observable {
             logger.debug(e.getMessage());
         }
         return stream;
-    }
-
-    public void setCallback(Callback cb) {
-        callbackRef = new WeakReference<>(cb);
-    }
-
-    public Callback getCallback() {
-        if (callbackRef != null) {
-            return callbackRef.get();
-        }
-        return null;
     }
 }
