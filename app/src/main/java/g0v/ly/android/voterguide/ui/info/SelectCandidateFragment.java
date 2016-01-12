@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,6 +111,8 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             candidate.addObserver(this);
         }
 
+        sortCandidateListWithNumber();
+
         adapter.setList(candidatesList);
         adapter.notifyDataSetChanged();
     }
@@ -124,6 +128,14 @@ public class SelectCandidateFragment extends Fragment implements Observer {
                 }
             });
         }
+    }
+
+    private void sortCandidateListWithNumber() {
+        Collections.sort(candidatesList, new Comparator<Candidate>() {
+            @Override public int compare(Candidate c1, Candidate c2) {
+                return c1.number - c2.number;
+            }
+        });
     }
 
     private RecyclerViewAdapter.OnItemClickListener onItemClickListener = new RecyclerViewAdapter.OnItemClickListener() {
