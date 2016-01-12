@@ -1,3 +1,5 @@
+<img src="https://raw.githubusercontent.com/HMW/VoterGuide/master/readme_images/google-play-badge.png" width="180">
+
 [![Stories in Ready](https://badge.waffle.io/HMW/VoterGuide.png?label=ready&title=Ready)](https://waffle.io/HMW/VoterGuide)
 
 # About
