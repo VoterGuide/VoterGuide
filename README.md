@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/HMW/VoterGuide.png?label=ready&title=Ready)](https://waffle.io/HMW/VoterGuide)
 ## Aboud
 
 g0v [legislative yuan voter guide](立委投票指南) Android project
