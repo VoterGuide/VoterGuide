@@ -1,7 +1,7 @@
 [![Stories in Ready](https://badge.waffle.io/HMW/VoterGuide.png?label=ready&title=Ready)](https://waffle.io/HMW/VoterGuide)
 
 # About
-g0v [legislative yuan voter guide](立委投票指南) Android project
+g0v [立委投票指南] Android project
 
 ## Environment
 - Android Studio 1.5
@@ -30,5 +30,5 @@ CC0 1.0 Universal
 This work is published from Taiwan.
 
 
-[legislative yuan voter guide]: https://github.com/g0v/twly-voter-guide
+[立委投票指南]: https://github.com/g0v/twly-voter-guide
 [waffle]: https://waffle.io/HMW/VoterGuide
