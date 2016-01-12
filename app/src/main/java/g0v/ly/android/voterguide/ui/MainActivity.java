@@ -29,6 +29,7 @@ public class MainActivity extends Activity {
     public enum State {
         STATE_MAIN("state.main"),
         STATE_GUIDE("state.guide"),
+        STATE_ABOUT("state.about"),
         STATE_INFO_COUNTIES_LIST("state.info.counties"),
         STATE_INFO_DISTRICT_LIST("state.info.districts"),
         STATE_INFO_CANDIDATES_LIST("state.info.candidates"),
@@ -100,6 +101,10 @@ public class MainActivity extends Activity {
                 break;
             case STATE_GUIDE:
                 fragment = GuideFragment.newFragment();
+                stacked = true;
+                break;
+            case STATE_ABOUT:
+                fragment = AboutFragment.newFragment();
                 stacked = true;
                 break;
             case STATE_INFO_COUNTIES_LIST:

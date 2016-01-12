@@ -95,7 +95,6 @@ public class SelectCountyFragment extends Fragment {
         }
     };
 
-
     private static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
