@@ -1,4 +1,6 @@
-<img src="https://raw.githubusercontent.com/HMW/VoterGuide/master/readme_images/google-play-badge.png" width="180">
+<a href="https://play.google.com/store/apps/details?id=g0v.ly.android.voterguide">
+<img alt="Get it on Google Play" src="https://raw.githubusercontent.com/HMW/VoterGuide/master/readme_images/google-play-badge.png"  width="180"/>
+</a>
 
 [![Stories in Ready](https://badge.waffle.io/HMW/VoterGuide.png?label=ready&title=Ready)](https://waffle.io/HMW/VoterGuide)
 
