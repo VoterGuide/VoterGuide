@@ -1,6 +1,6 @@
 <resources>
     <!-- Application -->
-    <string name="app_name">VoterGuide</string>
+    <string name="app_name">投票指南</string>
     <string name="action_settings">Settings</string>
 
     <!-- Main Fragment -->
