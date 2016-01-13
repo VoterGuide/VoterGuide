@@ -62,7 +62,9 @@ public class AboutFragment extends Fragment {
                     .add(activity.getString(R.string.how_to_use_app_content))
                     .add(activity.getString(R.string.content_source_content) +
                         activity.getString(R.string.g0v_ly_vote_api_url))
-                    .add(activity.getString(R.string.about_project_content1) +
+                    .add(activity.getString(R.string.about_project_content0) + " " +
+                            activity.getString(R.string.app_version) + "\n" +
+                            activity.getString(R.string.about_project_content1) +
                             activity.getString(R.string.project_github_url) + "\n" +
                             activity.getString(R.string.about_project_content2) +
                             activity.getString(R.string.project_waffle_url))
