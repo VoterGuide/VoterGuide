@@ -5,7 +5,7 @@
 
     <!-- Main Fragment -->
     <string name="guide">投票指南</string>
-    <string name="info">找立委</string>
+    <string name="info">找候選人</string>
     <string name="about_this_app">關於我</string>
 
     <!-- Guide Fragment -->
