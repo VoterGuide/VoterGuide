@@ -1,6 +1,7 @@
 <resources>
     <!-- Application -->
     <string name="app_name">投票指南</string>
+    <string name="app_version">v1.1</string>
     <string name="action_settings">Settings</string>
 
     <!-- Main Fragment -->
@@ -29,6 +30,7 @@
     <string name="disclaimer_content">本應用程式所提供之網頁或資料，均為被連結網站所提供，相關權利為該等網站或合法權利人所有，本網站不擔保其正確性、即時性或完整性。
 本應用程式不提供任何種類的明示或暗示的保證，您於使用本應用程式資訊和服務時應自行評估及判斷。</string>
     <string name="about_project_title">專案資訊</string>
+    <string name="about_project_content0">Version </string>
     <string name="about_project_content1">Github \n</string>
     <string name="about_project_content2">Waffle \n</string>
 
