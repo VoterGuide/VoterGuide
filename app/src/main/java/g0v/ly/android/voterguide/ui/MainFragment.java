@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import org.slf4j.Logger;
@@ -19,7 +20,7 @@ public class MainFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(MainFragment.class);
 
     @Bind(R.id.goto_guide_btn) RelativeLayout gotoGuideButton;
-    @Bind(R.id.goto_info_btn) RelativeLayout gotoInfoButton;
+    @Bind(R.id.goto_info_btn) LinearLayout gotoInfoButton;
     @Bind(R.id.goto_aboud_btn) RelativeLayout gotoAboutButton;
 
     public static MainFragment newFragment() {
