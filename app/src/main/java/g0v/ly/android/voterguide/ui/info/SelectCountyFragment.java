@@ -2,6 +2,7 @@ package g0v.ly.android.voterguide.ui.info;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.slf4j.Logger;
@@ -98,12 +100,14 @@ public class SelectCountyFragment extends Fragment {
     private static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+            ImageView countyImage;
             TextView titleTextView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
 
                 titleTextView = (TextView) itemView.findViewById(R.id.title_textview);
+                countyImage = (ImageView) itemView.findViewById(R.id.county_imageview);
 
                 itemView.setOnClickListener(this);
             }
@@ -135,7 +139,18 @@ public class SelectCountyFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder viewHolder, int position) {
-            viewHolder.titleTextView.setText(counties.get(position));
+            String county = counties.get(position);
+            viewHolder.titleTextView.setText(county);
+
+            Map<String, Drawable> countyToDrawableMap = HardCodeInfos.getInstance().getCountyToDrawableMap();
+            Drawable countyImage = countyToDrawableMap.get(county);
+            if (countyImage != null) {
+                viewHolder.countyImage.setVisibility(View.VISIBLE);
+                viewHolder.countyImage.setImageDrawable(countyImage);
+            }
+            else {
+                viewHolder.countyImage.setVisibility(View.GONE);
+            }
         }
 
         @Override

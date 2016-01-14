@@ -16,24 +16,45 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="100dp"
+            android:paddingLeft="10dp">
 
-            <TextView
-                android:id="@+id/title_textview"
-                style="@style/TextTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"/>
-
-            <TextView
-                android:id="@+id/subtitle_textview"
-                style="@style/TextContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/title_textview"
-                android:gravity="center"
+            <ImageView
+                android:id="@+id/county_imageview"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerVertical="true"
+                android:paddingRight="50dp"
+                android:background="#FF0000"
+                android:scaleType="fitXY"
                 android:visibility="gone"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@id/candidate_photo_imageview"
+                android:layout_toRightOf="@id/candidate_photo_imageview"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp">
+
+                <TextView
+                    android:id="@+id/title_textview"
+                    style="@style/TextTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:id="@+id/subtitle_textview"
+                    style="@style/TextContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title_textview"
+                    android:gravity="center"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
 
         </RelativeLayout>
 
