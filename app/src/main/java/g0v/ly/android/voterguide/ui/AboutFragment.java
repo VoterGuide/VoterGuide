@@ -1,7 +1,5 @@
 package g0v.ly.android.voterguide.ui;
 
-import com.google.common.collect.ImmutableList;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -13,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.common.collect.ImmutableList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
