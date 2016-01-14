@@ -1,15 +1,15 @@
 package g0v.ly.android.voterguide.ui;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +20,7 @@ import g0v.ly.android.voterguide.ui.info.SelectCandidateFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCountyFragment;
 import g0v.ly.android.voterguide.ui.info.SelectDistrictFragment;
 import g0v.ly.android.voterguide.utilities.InternalStorageHolder;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends Activity {
     public static String BUNDLE_KEY_SELECTED_COUNTY_STRING = "bundle.key.selected.county";
