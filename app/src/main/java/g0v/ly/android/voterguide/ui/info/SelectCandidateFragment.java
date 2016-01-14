@@ -1,9 +1,9 @@
 package g0v.ly.android.voterguide.ui.info;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.pnikosis.materialishprogress.ProgressWheel;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -42,6 +44,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
     private String selectedCountyString;
     private String selectedDistrictString;
 
+    @Bind(R.id.progress_circle) ProgressWheel progressCircle;
     @Bind(R.id.recycler_view) RecyclerView recyclerView;
 
     public static SelectCandidateFragment newFragment() {
@@ -90,6 +93,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
     public void onDestroyView() {
         super.onDestroyView();
         CandidatesManager.getInstance().deleteObserver(this);
+        ButterKnife.unbind(this);
     }
 
     private void getCandidates() {
@@ -113,6 +117,9 @@ public class SelectCandidateFragment extends Fragment implements Observer {
 
         sortCandidateListWithNumber();
 
+        if (candidatesList.size() > 0 && progressCircle.getVisibility() == View.VISIBLE) {
+            progressCircle.setVisibility(View.GONE);
+        }
         adapter.setList(candidatesList);
         adapter.notifyDataSetChanged();
     }
@@ -132,7 +139,8 @@ public class SelectCandidateFragment extends Fragment implements Observer {
 
     private void sortCandidateListWithNumber() {
         Collections.sort(candidatesList, new Comparator<Candidate>() {
-            @Override public int compare(Candidate c1, Candidate c2) {
+            @Override
+            public int compare(Candidate c1, Candidate c2) {
                 return c1.number - c2.number;
             }
         });
@@ -154,7 +162,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
 
     private static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             CardView cardView;
             CircleImageView candidatePhoto;
             TextView candidateNameTextView;
@@ -184,7 +192,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
         }
 
         public interface OnItemClickListener {
-            void onItemClick(View view , int position);
+            void onItemClick(View view, int position);
         }
 
         List<Candidate> candidates = new ArrayList<>();

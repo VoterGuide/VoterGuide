@@ -45,4 +45,5 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {  // Fabric Crashlytics
         transitive = true;
     }
+    compile 'com.pnikosis:materialish-progress:1.7'                 // Material-like progress circle
 }
