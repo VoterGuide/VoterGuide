@@ -34,7 +34,7 @@ public class FontManager {
     }
 
     public void setContext(Activity activity) {
-        if (Typeface.createFromAsset(activity.getAssets(), "fonts/Roboto-Light.ttf") == null) {
+        if (Typeface.createFromAsset(activity.getAssets(), "fonts/Roboto/Roboto-Light.ttf") == null) {
             logger.error("FontManager", "can't get typeface");
         }
 
