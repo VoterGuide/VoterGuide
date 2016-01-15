@@ -116,7 +116,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
 
         sortCandidateListWithNumber();
 
-        if (candidatesList.size() > 0 && progressCircle.getVisibility() == View.VISIBLE) {
+        if (candidatesList.size() > 0 && progressCircle != null && progressCircle.getVisibility() == View.VISIBLE) {
             progressCircle.setVisibility(View.GONE);
         }
         adapter.setList(candidatesList);
