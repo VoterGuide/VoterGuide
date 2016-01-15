@@ -1,10 +1,9 @@
 package g0v.ly.android.voterguide.ui.info;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,12 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.pnikosis.materialishprogress.ProgressWheel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import java.util.Observer;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import g0v.ly.android.voterguide.R;
 import g0v.ly.android.voterguide.model.Candidate;
 import g0v.ly.android.voterguide.model.CandidatesManager;
@@ -41,6 +43,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
     private String selectedCountyString;
     private String selectedDistrictString;
 
+    @Bind(R.id.progress_circle) ProgressWheel progressCircle;
     @Bind(R.id.recycler_view) RecyclerView recyclerView;
 
     public static SelectCandidateFragment newFragment() {
@@ -68,9 +71,9 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             selectedDistrictString = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING);
         }
 
-        Context context = getContext();
-        if (context != null) {
-            LinearLayoutManager llm = new LinearLayoutManager(context);
+        Activity activity = getActivity();
+        if (activity != null) {
+            LinearLayoutManager llm = new LinearLayoutManager(activity);
             recyclerView.setLayoutManager(llm);
         }
         else {
@@ -89,6 +92,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
     public void onDestroyView() {
         super.onDestroyView();
         CandidatesManager.getInstance().deleteObserver(this);
+        ButterKnife.unbind(this);
     }
 
     private void getCandidates() {
@@ -110,6 +114,11 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             candidate.addObserver(this);
         }
 
+        sortCandidateListWithNumber();
+
+        if (candidatesList.size() > 0 && progressCircle != null && progressCircle.getVisibility() == View.VISIBLE) {
+            progressCircle.setVisibility(View.GONE);
+        }
         adapter.setList(candidatesList);
         adapter.notifyDataSetChanged();
     }
@@ -125,6 +134,15 @@ public class SelectCandidateFragment extends Fragment implements Observer {
                 }
             });
         }
+    }
+
+    private void sortCandidateListWithNumber() {
+        Collections.sort(candidatesList, new Comparator<Candidate>() {
+            @Override
+            public int compare(Candidate c1, Candidate c2) {
+                return c1.number - c2.number;
+            }
+        });
     }
 
     private RecyclerViewAdapter.OnItemClickListener onItemClickListener = new RecyclerViewAdapter.OnItemClickListener() {
@@ -143,7 +161,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
 
     private static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             CardView cardView;
             CircleImageView candidatePhoto;
             TextView candidateNameTextView;
@@ -167,13 +185,13 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             @Override
             public void onClick(View v) {
                 if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick(v, getPosition());
+                    onItemClickListener.onItemClick(v, getAdapterPosition());
                 }
             }
         }
 
         public interface OnItemClickListener {
-            void onItemClick(View view , int position);
+            void onItemClick(View view, int position);
         }
 
         List<Candidate> candidates = new ArrayList<>();

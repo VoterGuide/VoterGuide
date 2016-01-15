@@ -1,12 +1,14 @@
 package g0v.ly.android.voterguide.ui;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.crashlytics.android.Crashlytics;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,9 +20,11 @@ import g0v.ly.android.voterguide.ui.info.SelectCandidateFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCountyFragment;
 import g0v.ly.android.voterguide.ui.info.SelectDistrictFragment;
 import g0v.ly.android.voterguide.utilities.FontManager;
+import g0v.ly.android.voterguide.utilities.HardCodeInfos;
 import g0v.ly.android.voterguide.utilities.InternalStorageHolder;
+import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends Activity {
     public static String BUNDLE_KEY_SELECTED_COUNTY_STRING = "bundle.key.selected.county";
     public static String BUNDLE_KEY_SELECTED_CANDIDATE_DISTRICT_STRING = "bundle.key.selected.candidate.district";
     public static String BUNDLE_KEY_SELECTED_CANDIDATE_NAME_STRING = "bundle.key.selected.candidate.name";
@@ -28,6 +32,7 @@ public class MainActivity extends FragmentActivity {
     public enum State {
         STATE_MAIN("state.main"),
         STATE_GUIDE("state.guide"),
+        STATE_ABOUT("state.about"),
         STATE_INFO_COUNTIES_LIST("state.info.counties"),
         STATE_INFO_DISTRICT_LIST("state.info.districts"),
         STATE_INFO_CANDIDATES_LIST("state.info.candidates"),
@@ -45,6 +50,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
 
         FontManager.getInstance().setContext(this);
@@ -52,6 +58,7 @@ public class MainActivity extends FragmentActivity {
         state = State.STATE_MAIN;
 
         InternalStorageHolder.getInstance().setContext(this);
+        HardCodeInfos.getInstance().prepareCountyToDrawableMap(this);
     }
 
     @Override
@@ -84,7 +91,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void launch(State newState) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
         Fragment fragment = fragmentManager.findFragmentByTag(newState.id);
 
         if (state != null && state == newState && fragment != null) {
@@ -101,6 +108,10 @@ public class MainActivity extends FragmentActivity {
                 break;
             case STATE_GUIDE:
                 fragment = GuideFragment.newFragment();
+                stacked = true;
+                break;
+            case STATE_ABOUT:
+                fragment = AboutFragment.newFragment();
                 stacked = true;
                 break;
             case STATE_INFO_COUNTIES_LIST:
@@ -150,6 +161,10 @@ public class MainActivity extends FragmentActivity {
         }
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_left_enter,
+                R.animator.fragment_slide_left_exit,
+                R.animator.fragment_slide_right_enter,
+                R.animator.fragment_slide_right_exit);
         fragmentTransaction.replace(R.id.fragmentHolder, fragment, newState.id);
         if (stacked) {
             fragmentTransaction.addToBackStack(null);

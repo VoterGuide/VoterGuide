@@ -1,5 +1,8 @@
 package g0v.ly.android.voterguide.model;
 
+import android.os.Handler;
+import android.os.HandlerThread;
+
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
@@ -22,11 +25,18 @@ public class CandidatesManager extends Observable {
     private static final Logger logger = LoggerFactory.getLogger(CandidatesManager.class);
 
     private static CandidatesManager instance;
-    private ListeningExecutorService servicePool = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
 
+    private ListeningExecutorService servicePool = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(10));
+    private Handler handler;
+
+    private List<String> downloadedCounties = new ArrayList<>();
     private List<Candidate> allCandidates = new ArrayList<>();
 
-    private CandidatesManager() {}
+    private CandidatesManager() {
+        HandlerThread handlerThread = new HandlerThread("thread");
+        handlerThread.start();
+        handler = new Handler(handlerThread.getLooper());
+    }
 
     public static CandidatesManager getInstance() {
         synchronized (CandidatesManager.class) {
@@ -77,10 +87,13 @@ public class CandidatesManager extends Observable {
     }
 
     private void downloadCandidatesOfCounty(final String countyString) {
-
-        new Thread(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
+                if (downloadedCounties.contains(countyString)) {
+                    return;
+                }
+
                 List<Candidate> candidates;
                 String countryStringInEnglish = "";
                 try {
@@ -119,8 +132,10 @@ public class CandidatesManager extends Observable {
                         logger.debug(e.getMessage());
                     }
                 }
-                while(hasNextPage);
+                while (hasNextPage);
+
+                downloadedCounties.add(countyString);
             }
-        }).start();
+        });
     }
 }

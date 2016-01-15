@@ -1,14 +1,41 @@
 <resources>
-    <string name = "app_name">VoterGuide</string>
+    <!-- Application -->
+    <string name="app_name">投票指南</string>
+    <string name="app_version">v1.1</string>
+    <string name="action_settings">Settings</string>
 
-    <string name = "hello_world">Hello world!</string>
-    <string name = "action_settings">Settings</string>
+    <!-- Main Fragment -->
+    <string name="guide">投票指南</string>
+    <string name="info">找候選人</string>
+    <string name="about_this_app">關於我</string>
 
-    <string name = "hello_blank_fragment">Hello blank fragment</string>
-    <string name = "back">Back</string>
-    <string name = "next">Next</string>
+    <!-- Guide Fragment -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
 
+    <!-- Info fragment -->
     <string name="candidate_education_title">學歷</string>
     <string name="candidate_experiences_title">經歷</string>
     <string name="candidate_manifesto_title">政見</string>
+
+    <!-- About fragment -->
+    <string name="app_goal_title">開發目地</string>
+    <string name="app_goal_content">減少盲目投票</string>
+    <string name="how_to_use_app_title">使用說明</string>
+    <string name="how_to_use_app_content">目前僅提供候選人查尋功能並持續更新中，更多詳細功能請造訪立委投票指南網站。</string>
+    <string name="content_source_title">資料來源</string>
+    <string name="content_source_content">g0v 立委投票指南 api\n</string>
+    <string name="disclaimer_title">免責聲明</string>
+    <string name="disclaimer_content">本應用程式所提供之網頁或資料，均為被連結網站所提供，相關權利為該等網站或合法權利人所有，本網站不擔保其正確性、即時性或完整性。
+本應用程式不提供任何種類的明示或暗示的保證，您於使用本應用程式資訊和服務時應自行評估及判斷。</string>
+    <string name="about_project_title">專案資訊</string>
+    <string name="about_project_content0">Version </string>
+    <string name="about_project_content1">Github \n</string>
+    <string name="about_project_content2">Waffle \n</string>
+
+    <!-- Links -->
+    <string name="g0v_ly_vote_api_url">vote.ly.g0v.tw/api/</string>
+    <string name="project_github_url">github.com/HMW/VoterGuide</string>
+    <string name="project_waffle_url">waffle.io/HMW/VoterGuide</string>
 </resources>
