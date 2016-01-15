@@ -12,19 +12,19 @@
 
     <style name="TextTitle">
         <item name="android:typeface">monospace</item>
-        <item name="android:textSize">40sp</item>
+        <item name="android:textSize">35sp</item>
         <item name="android:textColor">@color/theme_dark</item>
     </style>
 
     <style name="TextTitleLight">
         <item name="android:typeface">monospace</item>
-        <item name="android:textSize">40sp</item>
+        <item name="android:textSize">35sp</item>
         <item name="android:textColor">@color/theme_light</item>
     </style>
 
     <style name="TextContent">
         <item name="android:typeface">monospace</item>
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/theme_dark</item>
     </style>
 
