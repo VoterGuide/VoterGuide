@@ -155,11 +155,10 @@ public class MainActivity extends Activity {
         }
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(
-                R.animator.fragment_fade_in,
-                R.animator.fragment_fade_out,
-                R.animator.fragment_fade_in,
-                R.animator.fragment_fade_out);
+        fragmentTransaction.setCustomAnimations(R.animator.fragment_slide_left_enter,
+                R.animator.fragment_slide_left_exit,
+                R.animator.fragment_slide_right_enter,
+                R.animator.fragment_slide_right_exit);
         fragmentTransaction.replace(R.id.fragmentHolder, fragment, newState.id);
         if (stacked) {
             fragmentTransaction.addToBackStack(null);
