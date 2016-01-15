@@ -1,5 +1,10 @@
 package g0v.ly.android.voterguide.utilities;
 
+import android.app.Activity;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
+
+import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -7,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import g0v.ly.android.voterguide.R;
 import g0v.ly.android.voterguide.model.ElectionDistrict;
 
 public class HardCodeInfos {
@@ -32,6 +38,7 @@ public class HardCodeInfos {
     }
 
     private Map<TaiwanRegions, List<String>> countiesOfTaiwan = new HashMap<>();
+    private Map<String, Drawable> countyToDrawableMap = new HashMap<>();
     private List<ElectionDistrict> electionDistricts = new ArrayList<>();
 
     private HardCodeInfos() {
@@ -87,6 +94,32 @@ public class HardCodeInfos {
         countiesOfTaiwan.put(TaiwanRegions.EasternTaiwan, countiesListOfEasternTaiwan);
         countiesOfTaiwan.put(TaiwanRegions.Islands, countiesListOfTaiwanIslands);
         //countiesOfTaiwan.put(TaiwanRegions.Others, countiesListOfOthers);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public void prepareCountyToDrawableMap(Activity activity) {
+        countyToDrawableMap = ImmutableBiMap.<String, Drawable>builder()
+                .put("基隆市", ContextCompat.getDrawable(activity, R.drawable.keelungcity))
+                .put("臺北市", ContextCompat.getDrawable(activity, R.drawable.taipeicity))
+                .put("新北市", ContextCompat.getDrawable(activity, R.drawable.newtaipeicity))
+                .put("桃園市", ContextCompat.getDrawable(activity, R.drawable.taoyuan))
+                .put("宜蘭縣", ContextCompat.getDrawable(activity, R.drawable.yilan))
+                .put("新竹市", ContextCompat.getDrawable(activity, R.drawable.hsinchucity))
+                .put("新竹縣", ContextCompat.getDrawable(activity, R.drawable.hsinchu))
+                .put("苗栗縣", ContextCompat.getDrawable(activity, R.drawable.miaoli))
+                .put("臺中市", ContextCompat.getDrawable(activity, R.drawable.taichung))
+                .put("彰化縣", ContextCompat.getDrawable(activity, R.drawable.changhua))
+                .put("雲林縣", ContextCompat.getDrawable(activity, R.drawable.yunlin))
+                .put("南投縣", ContextCompat.getDrawable(activity, R.drawable.nantou))
+                .put("嘉義縣", ContextCompat.getDrawable(activity, R.drawable.chiayi))
+                .put("嘉義市", ContextCompat.getDrawable(activity, R.drawable.chiayicity))
+                .put("臺南市", ContextCompat.getDrawable(activity, R.drawable.tainan))
+                .put("高雄市", ContextCompat.getDrawable(activity, R.drawable.kaohsiung))
+                .put("屏東縣", ContextCompat.getDrawable(activity, R.drawable.pingtung))
+                .put("花蓮縣", ContextCompat.getDrawable(activity, R.drawable.hualien))
+                .put("臺東縣", ContextCompat.getDrawable(activity, R.drawable.taitung))
+                .put("澎湖縣", ContextCompat.getDrawable(activity, R.drawable.penghu))
+                .build();
     }
 
     private void prepareDistrictsInfo() {
@@ -191,11 +224,11 @@ public class HardCodeInfos {
         return counties;
     }
 
-    public List<String> getCountiesListFromRegion(TaiwanRegions region) {
-        return countiesOfTaiwan.get(region);
-    }
-
     public List<ElectionDistrict> getElectionDistricts() {
         return electionDistricts;
+    }
+
+    public Map<String, Drawable> getCountyToDrawableMap() {
+        return countyToDrawableMap;
     }
 }

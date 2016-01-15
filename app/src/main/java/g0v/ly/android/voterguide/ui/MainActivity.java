@@ -19,6 +19,7 @@ import g0v.ly.android.voterguide.ui.info.CandidateInfoFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCandidateFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCountyFragment;
 import g0v.ly.android.voterguide.ui.info.SelectDistrictFragment;
+import g0v.ly.android.voterguide.utilities.HardCodeInfos;
 import g0v.ly.android.voterguide.utilities.InternalStorageHolder;
 import io.fabric.sdk.android.Fabric;
 
@@ -53,6 +54,7 @@ public class MainActivity extends Activity {
         state = State.STATE_MAIN;
 
         InternalStorageHolder.getInstance().setContext(this);
+        HardCodeInfos.getInstance().prepareCountyToDrawableMap(this);
     }
 
     @Override
