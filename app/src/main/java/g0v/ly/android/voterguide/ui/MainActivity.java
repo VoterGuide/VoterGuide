@@ -19,6 +19,7 @@ import g0v.ly.android.voterguide.ui.info.CandidateInfoFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCandidateFragment;
 import g0v.ly.android.voterguide.ui.info.SelectCountyFragment;
 import g0v.ly.android.voterguide.ui.info.SelectDistrictFragment;
+import g0v.ly.android.voterguide.utilities.FontManager;
 import g0v.ly.android.voterguide.utilities.HardCodeInfos;
 import g0v.ly.android.voterguide.utilities.InternalStorageHolder;
 import io.fabric.sdk.android.Fabric;
@@ -51,6 +52,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
+
+        FontManager.getInstance().setContext(this);
+
         state = State.STATE_MAIN;
 
         InternalStorageHolder.getInstance().setContext(this);
