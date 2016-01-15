@@ -51,7 +51,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:background="@color/cardview_background_dark"
+                android:background="@color/theme_main"
                 style="@style/TextTitleLight"
                 android:text="@string/info"/>
 

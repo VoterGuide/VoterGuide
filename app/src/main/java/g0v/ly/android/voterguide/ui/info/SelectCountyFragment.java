@@ -133,7 +133,7 @@ public class SelectCountyFragment extends Fragment {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_region_card, parent, false);
+            View rootView = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_county_card, parent, false);
             return new ViewHolder(rootView);
         }
 

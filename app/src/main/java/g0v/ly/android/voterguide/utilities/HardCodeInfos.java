@@ -100,7 +100,7 @@ public class HardCodeInfos {
     public void prepareCountyToDrawableMap(Activity activity) {
         countyToDrawableMap = ImmutableBiMap.<String, Drawable>builder()
                 .put("基隆市", ContextCompat.getDrawable(activity, R.drawable.keelungcity))
-                .put("臺北市", ContextCompat.getDrawable(activity, R.drawable.taipei))
+                .put("臺北市", ContextCompat.getDrawable(activity, R.drawable.taipeicity))
                 .put("新北市", ContextCompat.getDrawable(activity, R.drawable.newtaipeicity))
                 .put("桃園市", ContextCompat.getDrawable(activity, R.drawable.taoyuan))
                 .put("宜蘭縣", ContextCompat.getDrawable(activity, R.drawable.yilan))
