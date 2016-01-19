@@ -25,7 +25,7 @@
     <style name="TextContent">
         <item name="android:typeface">monospace</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/theme_dark</item>
+        <item name="android:textColor">@color/theme_main</item>
     </style>
 
 </resources>
