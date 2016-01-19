@@ -1,10 +1,10 @@
 package g0v.ly.android.voterguide.model;
 
-import android.os.Handler;
-import android.os.HandlerThread;
-
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+
+import android.os.Handler;
+import android.os.HandlerThread;
 
 import org.json.JSONArray;
 import org.json.JSONException;

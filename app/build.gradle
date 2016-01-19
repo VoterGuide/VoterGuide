@@ -7,7 +7,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'io.fabric.tools:gradle:1.21.2'                   // 07-Dec-2015 18:09
+        classpath 'io.fabric.tools:gradle:1.21.2'                       // 07-Dec-2015 18:09
     }
 }
 
@@ -37,13 +37,14 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.google.guava:guava:19.0'                           // ImmutableList, ListenableFuture
-    compile 'com.jakewharton:butterknife:7.0.1'                     // UI binding
-    compile 'de.hdodenhof:circleimageview:2.0.0'                    // Candidate's profile photo in ListView
-    compile 'com.android.support:cardview-v7:23.1.1'                // Material CardView
-    compile 'com.android.support:recyclerview-v7:23.1.1'            // Material RecyclerView
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {  // Fabric Crashlytics
+    compile 'com.google.guava:guava:19.0'                               // ImmutableList, ListenableFuture
+    compile 'com.jakewharton:butterknife:7.0.1'                         // UI binding
+    compile 'de.hdodenhof:circleimageview:2.0.0'                        // Candidate's profile photo in ListView
+    compile 'com.android.support:cardview-v7:23.1.1'                    // Material CardView
+    compile 'com.android.support:recyclerview-v7:23.1.1'                // Material RecyclerView
+    compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {      // Fabric Crashlytics
         transitive = true;
     }
-    compile 'com.pnikosis:materialish-progress:1.7'                 // Material-like progress circle
+    compile 'com.pnikosis:materialish-progress:1.7'                     // Material-like progress circle
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.4.1' // ImageView handle OutOfMemoryErrors
 }
