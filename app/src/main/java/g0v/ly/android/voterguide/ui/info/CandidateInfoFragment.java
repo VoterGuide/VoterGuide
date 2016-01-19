@@ -7,8 +7,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +30,7 @@ public class CandidateInfoFragment extends Fragment implements Observer {
     private Candidate candidate;
     private String candidateName;
 
-    @Bind(R.id.candidate_photo_imageview) ImageView candidatePhotoImageView;
+    @Bind(R.id.candidate_photo_imageview) SubsamplingScaleImageView candidatePhotoImageView;
     @Bind(R.id.candidate_name_textview) TextView candidateNameTextView;
     @Bind(R.id.candidate_age_textview) TextView candidateAgeTextView;
     @Bind(R.id.candidate_gender_textview) TextView candidateGenderTextView;
@@ -71,7 +73,7 @@ public class CandidateInfoFragment extends Fragment implements Observer {
                     candidatePhotoImageView.post(new Runnable() {
                         @Override
                         public void run() {
-                            candidatePhotoImageView.setImageBitmap(photo);
+                            candidatePhotoImageView.setImage(ImageSource.bitmap(photo));
                         }
                     });
                 }
@@ -99,7 +101,7 @@ public class CandidateInfoFragment extends Fragment implements Observer {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    candidatePhotoImageView.setImageBitmap(candidate.getPhoto());
+                    candidatePhotoImageView.setImage(ImageSource.bitmap(candidate.getPhoto()));
                 }
             });
         }

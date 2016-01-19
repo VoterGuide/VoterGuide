@@ -26,10 +26,10 @@
                 android:paddingLeft="50dp"
                 android:paddingTop="5dp">
 
-                <ImageView
+                <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
                     android:id="@+id/candidate_photo_imageview"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="@dimen/candidate_photo_width"
+                    android:layout_height="@dimen/candidate_photo_height"
                     android:layout_marginEnd="10dp"
                     android:layout_marginRight="10dp" />
 

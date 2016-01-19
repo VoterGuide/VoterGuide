@@ -1,11 +1,11 @@
 package g0v.ly.android.voterguide.utilities;
 
+import com.google.common.collect.ImmutableBiMap;
+import com.google.common.collect.ImmutableList;
+
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-
-import com.google.common.collect.ImmutableBiMap;
-import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
