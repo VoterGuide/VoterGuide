@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pnikosis.materialishprogress.ProgressWheel;
@@ -169,6 +170,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             TextView candidatePartyTextView;
             TextView candidateGenderTextView;
             TextView candidateAgeTextView;
+            ImageView candidateElectedImageView;
 
             public ViewHolder(View itemView) {
                 super(itemView);
@@ -179,6 +181,7 @@ public class SelectCandidateFragment extends Fragment implements Observer {
                 candidateGenderTextView = (TextView) cardView.findViewById(R.id.candidate_gender_textview);
                 candidateAgeTextView = (TextView) cardView.findViewById(R.id.candidate_age_textview);
                 candidatePhoto = (CircleImageView) cardView.findViewById(R.id.candidate_photo_imageview);
+                candidateElectedImageView = (ImageView) cardView.findViewById(R.id.elected_imageview);
 
                 itemView.setOnClickListener(this);
             }
@@ -216,6 +219,13 @@ public class SelectCandidateFragment extends Fragment implements Observer {
             viewHolder.candidateGenderTextView.setText(candidate.gender);
             viewHolder.candidateAgeTextView.setText(candidate.age);
             viewHolder.candidatePhoto.setImageBitmap(candidate.getPhoto());
+
+            if (candidate.elected) {
+                viewHolder.candidateElectedImageView.setVisibility(View.VISIBLE);
+            }
+            else {
+                viewHolder.candidateElectedImageView.setVisibility(View.INVISIBLE);
+            }
         }
 
         @Override

@@ -26,20 +26,36 @@
                 android:paddingLeft="50dp"
                 android:paddingTop="5dp">
 
-                <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-                    android:id="@+id/candidate_photo_imageview"
+                <FrameLayout
+                    android:id="@+id/candidate_photo_layout"
                     android:layout_width="@dimen/candidate_photo_width"
                     android:layout_height="@dimen/candidate_photo_height"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp" />
+                    android:layout_marginRight="10dp">
+
+                    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+                        android:id="@+id/candidate_photo_imageview"
+                        android:layout_width="@dimen/candidate_photo_width"
+                        android:layout_height="@dimen/candidate_photo_height" />
+
+                    <ImageView
+                        android:id="@+id/elected_imageview"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/elected"
+                        android:contentDescription="@null"
+                        android:layout_gravity="bottom|right"
+                        android:visibility="invisible"/>
+
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/candidate_name_textview"
                     style="@style/TextTitle"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
-                    android:layout_toEndOf="@id/candidate_photo_imageview"
-                    android:layout_toRightOf="@id/candidate_photo_imageview"
+                    android:layout_toEndOf="@id/candidate_photo_layout"
+                    android:layout_toRightOf="@id/candidate_photo_layout"
                     android:gravity="center_vertical" />
 
                 <TextView
@@ -49,8 +65,8 @@
                     android:layout_height="25dp"
                     android:layout_below="@id/candidate_name_textview"
                     android:layout_marginRight="10dp"
-                    android:layout_toEndOf="@id/candidate_photo_imageview"
-                    android:layout_toRightOf="@id/candidate_photo_imageview"
+                    android:layout_toEndOf="@id/candidate_photo_layout"
+                    android:layout_toRightOf="@id/candidate_photo_layout"
                     android:gravity="center_vertical" />
 
                 <TextView
