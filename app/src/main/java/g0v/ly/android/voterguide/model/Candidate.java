@@ -49,6 +49,10 @@ public class Candidate extends Observable {
     public String experiences;
     public String manifesto;
 
+    public boolean elected = false;
+    public int votes;
+    public double votesPercentage;
+
     private String photoUrl;
 
     public Candidate(JSONObject rawObject, ListeningExecutorService servicePool) {
@@ -72,6 +76,10 @@ public class Candidate extends Observable {
             education = reviseNewlineSyntax(education);
             experiences = reviseNewlineSyntax(experiences);
             manifesto = reviseNewlineSyntax(manifesto);
+
+            elected = rawObject.getBoolean("elected");
+            votes = rawObject.getInt("votes");
+            votesPercentage = Double.parseDouble(rawObject.getString("votes_percentage"));
 
             photoUrl = composePhotoUrl();
             loadPhoto(servicePool);
