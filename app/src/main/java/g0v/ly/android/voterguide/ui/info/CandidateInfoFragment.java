@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
@@ -38,6 +39,7 @@ public class CandidateInfoFragment extends Fragment implements Observer {
     @Bind(R.id.candidate_education_textview) TextView candidateEducationTextView;
     @Bind(R.id.candidate_experiences_textview) TextView candidateExperiencesTextView;
     @Bind(R.id.candidate_manifesto_textview) TextView candidateManifestoTextView;
+    @Bind(R.id.elected_imageview) ImageView candidateElectedImageView;
 
     public static CandidateInfoFragment newFragment(String name) {
         return new CandidateInfoFragment(name);
@@ -64,6 +66,13 @@ public class CandidateInfoFragment extends Fragment implements Observer {
         candidateEducationTextView.setText(candidate.education);
         candidateExperiencesTextView.setText(candidate.experiences);
         candidateManifestoTextView.setText(candidate.manifesto);
+
+        if (candidate.elected) {
+            candidateElectedImageView.setVisibility(View.VISIBLE);
+        }
+        else {
+            candidateElectedImageView.setVisibility(View.INVISIBLE);
+        }
 
         new Thread(new Runnable() {
             @Override
