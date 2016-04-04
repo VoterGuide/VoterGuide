@@ -16,6 +16,12 @@
         <item name="android:textColor">@color/theme_dark</item>
     </style>
 
+    <style name="TextSubTitle">
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@color/theme_dark</item>
+    </style>
+
     <style name="TextTitleLight">
         <item name="android:typeface">monospace</item>
         <item name="android:textSize">35sp</item>
