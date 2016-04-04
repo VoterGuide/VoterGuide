@@ -40,6 +40,8 @@ public class CandidateInfoFragment extends Fragment implements Observer {
     @Bind(R.id.candidate_experiences_textview) TextView candidateExperiencesTextView;
     @Bind(R.id.candidate_manifesto_textview) TextView candidateManifestoTextView;
     @Bind(R.id.elected_imageview) ImageView candidateElectedImageView;
+    @Bind(R.id.candidate_votes_textview) TextView candidateVotesTextView;
+    @Bind(R.id.candidate_votes_percentage_textview) TextView candidateVotesPercentageTextView;
 
     public static CandidateInfoFragment newFragment(String name) {
         return new CandidateInfoFragment(name);
@@ -66,6 +68,8 @@ public class CandidateInfoFragment extends Fragment implements Observer {
         candidateEducationTextView.setText(candidate.education);
         candidateExperiencesTextView.setText(candidate.experiences);
         candidateManifestoTextView.setText(candidate.manifesto);
+        candidateVotesTextView.setText(getString(R.string.candidate_votes_content, candidate.votes));
+        candidateVotesPercentageTextView.setText(getString(R.string.candidate_votes_percentage_content, candidate.votesPercentage));
 
         if (candidate.elected) {
             candidateElectedImageView.setVisibility(View.VISIBLE);
