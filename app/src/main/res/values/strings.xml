@@ -15,6 +15,10 @@
     <string name="next">Next</string>
 
     <!-- Info fragment -->
+    <string name="candidate_votes">得票數</string>
+    <string name="candidate_votes_content">%1$d 票</string>
+    <string name="candidate_votes_percentage">得票率</string>
+    <string name="candidate_votes_percentage_content">%1$.2f</string>
     <string name="candidate_education_title">學歷</string>
     <string name="candidate_experiences_title">經歷</string>
     <string name="candidate_manifesto_title">政見</string>
