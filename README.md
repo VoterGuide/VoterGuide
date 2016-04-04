@@ -8,17 +8,17 @@
 g0v [立委投票指南] Android project
 
 ## Environment
-- Android Studio 1.5
-- Build tool version 23.0.1
+- Android Studio 2.0 RC1
+- Build tool version 23.0.2
 - Support Android 4.0.3 (api 15) and above
 - Use Android 6 (api 23) as target SDK
 - Third party libs:
-    - appcompat-v7:23.1.1
+    - appcompat-v7:23.2.1
     - guava:19.0 (ImmutableList, ListenableFuture)
     - butterknife:7.0.1 (UI binding)
     - circleimageview:2.0.0 (Candidate's profile photo in ListView)
-    - cardview-v7:23.1.1 (Material CardView)
-    - recyclerview-v7:23.1.1 (Material RecyclerView)
+    - cardview-v7:23.2.1 (Material CardView)
+    - recyclerview-v7:23.2.1 (Material RecyclerView)
     - crashlytics:2.5.5@aar (Fabric Crashlytics crash report)
 
 ## IDE setup
@@ -27,12 +27,15 @@ g0v [立委投票指南] Android project
 
 
 ## Other Infos
-Project [waffle]
+- Project [waffle]
+- Counties' images from [點亮台灣 設計規範]
 
 ## License
 CC0 1.0 Universal
+
 This work is published from Taiwan.
 
 
 [立委投票指南]: https://github.com/g0v/twly-voter-guide
 [waffle]: https://waffle.io/HMW/VoterGuide
+[點亮台灣 設計規範]:http://design.iing.tw
