@@ -38,6 +38,8 @@ public class SelectDistrictFragment extends Fragment {
         return new SelectDistrictFragment();
     }
 
+    public SelectDistrictFragment() {}
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

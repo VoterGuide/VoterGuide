@@ -38,7 +38,7 @@ public class ViewPagerCandidateInfoFragment extends Fragment implements Observer
         return new ViewPagerCandidateInfoFragment();
     }
 
-    private ViewPagerCandidateInfoFragment() {
+    public ViewPagerCandidateInfoFragment() {
     }
 
     @Override
@@ -91,7 +91,8 @@ public class ViewPagerCandidateInfoFragment extends Fragment implements Observer
 
         if (candidatesList.size() > 0) {
             for (Candidate candidate : candidatesList) {
-                fragments.add(CandidateInfoFragment.newFragment(candidate.name));
+                fragments.add(CandidateInfoFragment.newFragment());
+                // TODO: put Name string to arguments to CandidateInfoFragment
             }
         }
         viewPager.setAdapter(pagerAdapter);

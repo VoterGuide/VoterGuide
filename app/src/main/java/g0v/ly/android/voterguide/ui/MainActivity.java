@@ -154,7 +154,7 @@ public class MainActivity extends Activity {
                 String nameString = bundleMessages.get(BUNDLE_KEY_SELECTED_CANDIDATE_NAME_STRING);
                 if (nameString != null) {
                     args.putString(BUNDLE_KEY_SELECTED_CANDIDATE_NAME_STRING, nameString);
-                    fragment = CandidateInfoFragment.newFragment(nameString);
+                    fragment = CandidateInfoFragment.newFragment();
                     fragment.setArguments(args);
                 }
                 break;

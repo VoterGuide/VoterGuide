@@ -41,6 +41,8 @@ public class SelectCountyFragment extends Fragment {
         return new SelectCountyFragment();
     }
 
+    public SelectCountyFragment() {}
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

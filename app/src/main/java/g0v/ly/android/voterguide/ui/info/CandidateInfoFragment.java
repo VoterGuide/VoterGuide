@@ -24,12 +24,14 @@ import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
 import g0v.ly.android.voterguide.model.Candidate;
 import g0v.ly.android.voterguide.model.CandidatesManager;
+import g0v.ly.android.voterguide.ui.MainActivity;
 
 public class CandidateInfoFragment extends Fragment implements Observer {
     private static final Logger logger = LoggerFactory.getLogger(CandidateInfoFragment.class);
 
+    private static final String BUNDLE_ARGUMENTS_NAME = "bundle.arguments.name";
+
     private Candidate candidate;
-    private String candidateName;
 
     @Bind(R.id.candidate_photo_imageview) SubsamplingScaleImageView candidatePhotoImageView;
     @Bind(R.id.candidate_name_textview) TextView candidateNameTextView;
@@ -43,19 +45,19 @@ public class CandidateInfoFragment extends Fragment implements Observer {
     @Bind(R.id.candidate_votes_textview) TextView candidateVotesTextView;
     @Bind(R.id.candidate_votes_percentage_textview) TextView candidateVotesPercentageTextView;
 
-    public static CandidateInfoFragment newFragment(String name) {
-        return new CandidateInfoFragment(name);
+    public static CandidateInfoFragment newFragment() {
+        return new CandidateInfoFragment();
     }
 
-    private CandidateInfoFragment(String candidateName) {
-        this.candidateName = candidateName;
-    }
+    public CandidateInfoFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_candidate_info, container, false);
 
         ButterKnife.bind(this, rootView);
+
+        String candidateName = getArguments().getString(MainActivity.BUNDLE_KEY_SELECTED_CANDIDATE_NAME_STRING, "candidate_name");
 
         CandidatesManager candidatesManager = CandidatesManager.getInstance();
         candidate = candidatesManager.getCandidateWithName(candidateName);

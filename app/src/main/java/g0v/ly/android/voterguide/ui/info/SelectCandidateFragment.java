@@ -52,6 +52,8 @@ public class SelectCandidateFragment extends Fragment implements Observer {
         return new SelectCandidateFragment();
     }
 
+    public SelectCandidateFragment() {}
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

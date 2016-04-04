@@ -36,7 +36,7 @@ public class AboutFragment extends Fragment {
         return new AboutFragment();
     }
 
-    private AboutFragment() {}
+    public AboutFragment() {}
 
     @Nullable
     @Override
