@@ -7,18 +7,18 @@
 # About
 g0v [立委投票指南] Android project
 
+- Support Android 4.1 (api 16) and above
+
 ## Environment
-- Android Studio 2.0 RC1
-- Build tool version 23.0.2
-- Support Android 4.0.3 (api 15) and above
-- Use Android 6 (api 23) as target SDK
+- Android Studio 2.1.3
+- Build tool version 24.0.2
 - Third party libs:
-    - appcompat-v7:23.2.1
+    - appcompat-v7:24.2.0
     - guava:19.0 (ImmutableList, ListenableFuture)
     - butterknife:7.0.1 (UI binding)
     - circleimageview:2.0.0 (Candidate's profile photo in ListView)
-    - cardview-v7:23.2.1 (Material CardView)
-    - recyclerview-v7:23.2.1 (Material RecyclerView)
+    - cardview-v7:24.2.0 (Material CardView)
+    - recyclerview-v7:24.2.0 (Material RecyclerView)
     - crashlytics:2.5.5@aar (Fabric Crashlytics crash report)
 
 ## IDE setup
