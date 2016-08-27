@@ -38,6 +38,7 @@ public class CandidateInfoFragment extends Fragment implements Observer {
     @Bind(R.id.candidate_age_textview) TextView candidateAgeTextView;
     @Bind(R.id.candidate_gender_textview) TextView candidateGenderTextView;
     @Bind(R.id.candidate_party_textview) TextView candidatePartyTextView;
+    @Bind(R.id.candidate_contribution_textview) TextView candidateContributionTextView;
     @Bind(R.id.candidate_education_textview) TextView candidateEducationTextView;
     @Bind(R.id.candidate_experiences_textview) TextView candidateExperiencesTextView;
     @Bind(R.id.candidate_manifesto_textview) TextView candidateManifestoTextView;
@@ -70,8 +71,18 @@ public class CandidateInfoFragment extends Fragment implements Observer {
         candidateEducationTextView.setText(candidate.education);
         candidateExperiencesTextView.setText(candidate.experiences);
         candidateManifestoTextView.setText(candidate.manifesto);
+
+
         candidateVotesTextView.setText(getString(R.string.candidate_votes_content, candidate.votes));
-        candidateVotesPercentageTextView.setText(getString(R.string.candidate_votes_percentage_content, candidate.votesPercentage));
+        candidateVotesPercentageTextView.setText(String.format(getResources().getString(R.string.candidate_votes_percentage_content), candidate.votesPercentageString));
+
+        if (candidate.hasContribution) {
+            candidateContributionTextView.setVisibility(View.VISIBLE);
+            candidateContributionTextView.setText(candidate.contributionBalance);
+        }
+        else {
+            candidateContributionTextView.setVisibility(View.GONE);
+        }
 
         if (candidate.elected) {
             candidateElectedImageView.setVisibility(View.VISIBLE);

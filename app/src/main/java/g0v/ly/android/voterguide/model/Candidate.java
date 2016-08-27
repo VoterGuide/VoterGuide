@@ -49,9 +49,14 @@ public class Candidate extends Observable {
     public String experiences;
     public String manifesto;
 
+    public boolean hasContribution = false;
+    public String contributionBalance;
+    public String contributionInTotal;
+    public String contributionOutTotal;
+
     public boolean elected = false;
     public int votes;
-    public double votesPercentage;
+    public String votesPercentageString;
 
     private String photoUrl;
 
@@ -77,9 +82,20 @@ public class Candidate extends Observable {
             experiences = reviseNewlineSyntax(experiences);
             manifesto = reviseNewlineSyntax(manifesto);
 
+            if (!rawObject.isNull("politicalcontributions")) {
+                JSONObject contributionObject = rawObject.getJSONObject("politicalcontributions");
+                hasContribution = contributionObject != null;
+                if (hasContribution) {
+                    contributionBalance = contributionObject.getString("balance");
+                    contributionInTotal = contributionObject.getString("in_total");
+                    contributionOutTotal = contributionObject.getString("out_total");
+                }
+            }
+
             elected = rawObject.getBoolean("elected");
             votes = rawObject.getInt("votes");
-            votesPercentage = Double.parseDouble(rawObject.getString("votes_percentage"));
+            double votesPercentage = Double.parseDouble(rawObject.getString("votes_percentage"));
+            votesPercentageString = String.format(Locale.getDefault(), "%.2f", votesPercentage);
 
             photoUrl = composePhotoUrl();
             loadPhoto(servicePool);
