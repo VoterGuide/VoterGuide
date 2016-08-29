@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,8 +31,6 @@ import g0v.ly.android.voterguide.ui.MainActivity;
 public class CandidateInfoFragment extends Fragment implements Observer {
     private static final Logger logger = LoggerFactory.getLogger(CandidateInfoFragment.class);
 
-    private static final String BUNDLE_ARGUMENTS_NAME = "bundle.arguments.name";
-
     private Candidate candidate;
 
     @Bind(R.id.candidate_photo_imageview) SubsamplingScaleImageView candidatePhotoImageView;
@@ -38,6 +38,8 @@ public class CandidateInfoFragment extends Fragment implements Observer {
     @Bind(R.id.candidate_age_textview) TextView candidateAgeTextView;
     @Bind(R.id.candidate_gender_textview) TextView candidateGenderTextView;
     @Bind(R.id.candidate_party_textview) TextView candidatePartyTextView;
+    @Bind(R.id.candidate_votes_percentage_layout) View candidateVotesPercentateLayout;
+    @Bind(R.id.candidate_votes_percentage_view) View candidateVotesPercentateView;
     @Bind(R.id.candidate_contribution_textview) TextView candidateContributionTextView;
     @Bind(R.id.candidate_education_textview) TextView candidateEducationTextView;
     @Bind(R.id.candidate_experiences_textview) TextView candidateExperiencesTextView;
@@ -71,7 +73,6 @@ public class CandidateInfoFragment extends Fragment implements Observer {
         candidateEducationTextView.setText(candidate.education);
         candidateExperiencesTextView.setText(candidate.experiences);
         candidateManifestoTextView.setText(candidate.manifesto);
-
 
         candidateVotesTextView.setText(getString(R.string.candidate_votes_content, candidate.votes));
         candidateVotesPercentageTextView.setText(String.format(getResources().getString(R.string.candidate_votes_percentage_content), candidate.votesPercentageString));
@@ -108,6 +109,23 @@ public class CandidateInfoFragment extends Fragment implements Observer {
                 }
             }
         }).start();
+
+        candidateVotesPercentateLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                int layoutWidth = candidateVotesPercentateLayout.getWidth();
+                double percentage = Double.valueOf(candidate.votesPercentageString);
+                double percentageViewWidth = (layoutWidth * percentage) / 100;
+                //candidateVotesPercentateView.setMinimumWidth((int) percentageViewWidth);
+                candidateVotesPercentateView.getLayoutParams().width = (int) percentageViewWidth;
+                candidateVotesPercentateView.requestLayout();
+
+                Animation animation = new ScaleAnimation(0f, 1f, 1f, 1f);
+                animation.setDuration(500);
+                candidateVotesPercentateView.setAnimation(animation);
+                animation.start();
+            }
+        });
 
         return rootView;
     }

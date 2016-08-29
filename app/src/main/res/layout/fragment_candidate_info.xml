@@ -90,11 +90,26 @@
 
             </RelativeLayout>
 
+            <FrameLayout
+                android:id="@+id/candidate_votes_percentage_layout"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@id/candidate_basic_info_layout"
+                android:background="#999">
+
+                <View
+                    android:id="@+id/candidate_votes_percentage_view"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#900"/>
+
+            </FrameLayout>
+
             <TextView
                 android:id="@+id/candidate_votes_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/candidate_basic_info_layout"
+                android:layout_below="@id/candidate_votes_percentage_layout"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginEnd="10dp"
