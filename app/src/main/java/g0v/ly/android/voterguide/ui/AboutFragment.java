@@ -1,7 +1,5 @@
 package g0v.ly.android.voterguide.ui;
 
-import com.google.common.collect.ImmutableList;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -23,6 +21,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import g0v.ly.android.voterguide.R;
+import g0v.ly.android.voterguide.model.AboutContentManager;
 
 public class AboutFragment extends Fragment {
     private static final Logger logger = LoggerFactory.getLogger(AboutFragment.class);
@@ -49,27 +48,9 @@ public class AboutFragment extends Fragment {
             LinearLayoutManager llm = new LinearLayoutManager(activity);
             recyclerView.setLayoutManager(llm);
 
-            aboutInfoTitles = ImmutableList.<String>builder()
-                    .add(activity.getString(R.string.app_goal_title))
-                    .add(activity.getString(R.string.how_to_use_app_title))
-                    .add(activity.getString(R.string.content_source_title))
-                    .add(activity.getString(R.string.about_project_title))
-                    .add(activity.getString(R.string.disclaimer_title))
-                    .build();
-
-            aboutInfoContents = ImmutableList.<String>builder()
-                    .add(activity.getString(R.string.app_goal_content))
-                    .add(activity.getString(R.string.how_to_use_app_content))
-                    .add(activity.getString(R.string.content_source_content) +
-                        activity.getString(R.string.g0v_ly_vote_api_url))
-                    .add(activity.getString(R.string.about_project_content0) + " " +
-                            activity.getString(R.string.app_version) + "\n" +
-                            activity.getString(R.string.about_project_content1) +
-                            activity.getString(R.string.project_github_url) + "\n" +
-                            activity.getString(R.string.about_project_content2) +
-                            activity.getString(R.string.project_waffle_url))
-                    .add(activity.getString(R.string.disclaimer_content))
-                    .build();
+            AboutContentManager aboutContentManager = AboutContentManager.getInstance();
+            aboutInfoTitles = aboutContentManager.getAboutTitleStringList();
+            aboutInfoContents = aboutContentManager.getAboutContentStringList();
         }
         else {
             // TODO: error page
