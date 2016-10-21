@@ -165,7 +165,7 @@ public class MainActivity extends Activity {
                 R.animator.fragment_slide_left_exit,
                 R.animator.fragment_slide_right_enter,
                 R.animator.fragment_slide_right_exit);
-        fragmentTransaction.replace(R.id.fragmentHolder, fragment, newState.id);
+        fragmentTransaction.replace(R.id.fragment_holder, fragment, newState.id);
         if (stacked) {
             fragmentTransaction.addToBackStack(null);
         }

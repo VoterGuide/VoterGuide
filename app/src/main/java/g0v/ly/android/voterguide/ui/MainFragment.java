@@ -21,7 +21,7 @@ public class MainFragment extends Fragment {
 
     @Bind(R.id.goto_guide_btn) RelativeLayout gotoGuideButton;
     @Bind(R.id.goto_info_btn) LinearLayout gotoInfoButton;
-    @Bind(R.id.goto_aboud_btn) RelativeLayout gotoAboutButton;
+    @Bind(R.id.goto_about_btn) RelativeLayout gotoAboutButton;
 
     public static MainFragment newFragment() {
         return new MainFragment();
@@ -57,7 +57,7 @@ public class MainFragment extends Fragment {
                 case R.id.goto_info_btn:
                     ((MainActivity) activity).gotoFragmentWithState(MainActivity.State.STATE_INFO_COUNTIES_LIST, null);
                     break;
-                case R.id.goto_aboud_btn:
+                case R.id.goto_about_btn:
                     ((MainActivity) activity).gotoFragmentWithState(MainActivity.State.STATE_ABOUT, null);
                     break;
             }

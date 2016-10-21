@@ -71,7 +71,7 @@
         android:foreground="?android:attr/selectableItemBackground">
 
         <RelativeLayout
-            android:id="@+id/goto_aboud_btn"
+            android:id="@+id/goto_about_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
