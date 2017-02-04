@@ -2,6 +2,7 @@
 <img alt="Get it on Google Play" src="https://raw.githubusercontent.com/HMW/VoterGuide/master/readme_images/google-play-badge.png"  width="180"/>
 </a>
 
+[![Build Status](https://travis-ci.org/VoterGuide/VoterGuide.svg?branch=master)](https://travis-ci.org/VoterGuide/VoterGuide)
 [![Stories in Ready](https://badge.waffle.io/HMW/VoterGuide.png?label=ready&title=Ready)](https://waffle.io/HMW/VoterGuide)
 
 # About
