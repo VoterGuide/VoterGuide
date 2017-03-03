@@ -14,7 +14,7 @@ android:
     components:
         - platform-tools
         - tools
-        - build-tools-25.0.0
+        - build-tools-25.0.2
         - android-25
 
         # Additional components
@@ -23,7 +23,7 @@ android:
         - extra-android-m2repository
 
         #system images
-        - sys-img-armeabi-v7a-android-19
+#        - sys-img-armeabi-v7a-android-19
         - sys-img-armeabi-v7a-android-21
 
 licenses:
