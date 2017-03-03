@@ -43,5 +43,4 @@ android:
     - adb shell input keyevent 82 &
 
   script: 
-    - ./gradlew clean
-    - ./gradlew connectedAndroidTest
+    - travis_wait 20 ./gradlew clean connectedAndroidTest
